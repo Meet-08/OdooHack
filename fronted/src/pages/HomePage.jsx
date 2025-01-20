@@ -1,9 +1,33 @@
-import React from 'react'
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const HomeScreen = () => {
+const HomePage = () => {
+    const navigate = useNavigate();
+
+    const navigateToSchemes = () => {
+        navigate('/schemes');
+    };
+
+    const navigateToReportIssue = () => {
+        navigate('/report');
+    };
+
     return (
-        <div>HomeScreen</div>
-    )
-}
+        <div style={styles.container}>
+            <button onClick={navigateToSchemes}>View Schemes</button>
+            <button onClick={navigateToReportIssue}>Report an Issue</button>
+        </div>
+    );
+};
 
-export default HomeScreen
+const styles = {
+    container: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+    },
+};
+
+export default HomePage;
