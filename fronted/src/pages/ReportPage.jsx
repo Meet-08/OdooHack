@@ -7,7 +7,7 @@ const ReportIssue = () => {
     const [location, setLocation] = useState('');
 
     const handleSubmit = () => {
-        axios.post('http://localhost:5000/api/issue', { title, description, location })
+        axios.post('http://localhost:3000/api/issues', { title, description, location })
             .then(() => {
                 alert('Issue reported successfully!');
                 setTitle('');

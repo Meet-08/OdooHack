@@ -8,7 +8,7 @@ const ReportIssue = () => {
 
     const handleSubmit = async () => {
         try {
-            const response = await axios.post('http://localhost:5000/api/issues', {
+            const response = await axios.post('http://localhost:3000/api/issues', {
                 title,
                 description,
                 location,

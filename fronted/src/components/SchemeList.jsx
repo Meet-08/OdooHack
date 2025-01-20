@@ -6,7 +6,7 @@ const SchemeList = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/scheme') // Update with your backend URL
+        axios.get('http://localhost:3000/api/scheme') // Update with your backend URL
             .then(response => {
                 setSchemes(response.data);
                 setLoading(false);
