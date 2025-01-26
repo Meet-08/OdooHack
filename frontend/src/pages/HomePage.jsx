@@ -13,9 +13,10 @@ const HomePage = () => {
     };
 
     return (
-        <div style={styles.container}>
+        <div style={styles.container} className='bg-blue-500'>
             <button onClick={navigateToSchemes}>View Schemes</button>
             <button onClick={navigateToReportIssue}>Report an Issue</button>
+            <button onClick={() => navigate('/register')}>Register</button>
         </div>
     );
 };
