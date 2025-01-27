@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Navbar from '../components/Navbar';
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -13,11 +14,10 @@ const HomePage = () => {
     };
 
     return (
-        <div style={styles.container} className='bg-blue-500'>
-            <button onClick={navigateToSchemes}>View Schemes</button>
-            <button onClick={navigateToReportIssue}>Report an Issue</button>
-            <button onClick={() => navigate('/register')}>Register</button>
-        </div>
+        <>
+            <Navbar />
+
+        </>
     );
 };
 

@@ -7,9 +7,9 @@ import {
 } from "react-icons/ti";
 
 export const platforms = [
-    { name: "Facebook", icon: facebook },
-    { name: "Google", icon: google, },
-    { name: "LinkedIn", icon: linkedin },
-    { name: "Twitter", icon: x },
-    { name: "GitHub", icon: github },
+    { name: "Facebook", Icon: facebook },
+    { name: "Google", Icon: google, },
+    { name: "LinkedIn", Icon: linkedin },
+    { name: "Twitter", Icon: x },
+    // { name: "GitHub", Icon: github },
 ];

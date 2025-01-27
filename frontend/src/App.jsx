@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage'
 import ReportPage from './pages/ReportPage'
 import SchemePage from './pages/SchemePage'
 import Register from './pages/Register'
+import Login from './pages/Login'
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
         <Route path='/schemes' element={<SchemePage />} />
         <Route path='/report' element={<ReportPage />} />
         <Route path='/register' element={<Register />} />
+        <Route path='/login' element={<Login />} />
       </Routes>
     </BrowserRouter>
   )
