@@ -99,15 +99,15 @@ const SchemeShow = () => {
             {
                 data.map((d) => {
                     return (
-                        <div className='flex p-4 items-center border-2 border-slate-500 rounded-2xl' key={d.id}>
+                        <div className='flex p-4 items-center border-2 border-slate-500 rounded-2xl h-[90%]' key={d.id}>
                             <div className='bg-amber-500 p-2 text-3xl rounded-2xl'>
                                 {d.icon}
                             </div>
                             <div className='ml-2'>
-                                <h3 className=''>
+                                <h3>
                                     {d.category}
                                 </h3>
-                                <div className='flex '>
+                                <div className='flex'>
                                     <span className='mr-1 text-blue-600 text-sm'>
                                         {d.schemes}
                                     </span>
