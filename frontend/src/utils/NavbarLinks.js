@@ -10,21 +10,21 @@ const urls = [
             },
             {
                 name: 'For you',
-                path: '/for-you'
+                path: 'for-you'
             }
         ]
     },
     {
         name: 'Initiatives',
-        url: '/initiatives'
+        url: 'initiatives'
     },
     {
-        name: 'Scheme',
-        url: '/scheme'
+        name: 'Schemes',
+        url: 'schemes'
     },
     {
         name: 'Issues',
-        url: '/issues'
+        url: 'issues'
     },
 ]
 

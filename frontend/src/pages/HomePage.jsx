@@ -2,6 +2,8 @@ import React from 'react';
 import Navbar from '../components/Navbar';
 import ImageSlider from '../components/ImageSlider';
 import Latest from '../components/Latest';
+import FAQ from '../components/FAQ';
+import Footer from '../components/Footer';
 
 const HomePage = () => {
 
@@ -29,7 +31,12 @@ const HomePage = () => {
     ]
 
     return (
-        <>
+        <div className='mx-6'>
+            {/* Start */}
+            <div className='fixed bottom-3 right-1.5 size-12 flex justify-center items-center bg-black p-2 rounded-full'>
+                <button className='text-green-500 text-2xl'>+</button>
+            </div>
+            {/* End */}
             <Navbar />
             <ImageSlider />
 
@@ -53,7 +60,9 @@ const HomePage = () => {
                 </h3>
                 <Latest data={initiatives} />
             </div>
-        </>
+            <FAQ />
+            <Footer />
+        </div>
     );
 };
 
