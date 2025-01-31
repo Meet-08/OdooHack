@@ -10,13 +10,11 @@ const Register = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
 
     const submitForm = async (data) => {
-        ///here backend and data is in already in object....
-        console.log(data);
         try {
             const response = await axios.post('http://localhost:3000/api/users/register', data);
             alert('User registered successfully!');
         } catch (err) {
-            alert('Error reporting issue!' + err);
+            alert('Error Registering User!' + err);
         }
     }
 

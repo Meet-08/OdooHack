@@ -1,9 +1,9 @@
 import React from 'react';
-import Navbar from '../components/Navbar';
-import ImageSlider from '../components/ImageSlider';
 import Latest from '../components/Latest';
 import FAQ from '../components/FAQ';
 import Footer from '../components/Footer';
+import Topbar from '../components/Topbar';
+import Sidebar from '../components/Sidebar';
 
 const HomePage = () => {
 
@@ -33,34 +33,15 @@ const HomePage = () => {
     return (
         <div className='mx-6'>
             {/* Start */}
-            <div className='fixed bottom-3 right-1.5 size-12 flex justify-center items-center bg-black p-2 rounded-full'>
-                <button className='text-green-500 text-2xl'>+</button>
-            </div>
+            <button className='fixed bottom-3 text-xl space-x-1 left-1.5 w-fit flex justify-center items-center bg-blue-400 p-2 rounded-full px-2 border-2 border-black border-solid'>
+                <span className='font-semibold px-1.5 rounded-full bg-black text-white'>+</span>
+                <span className='font-bold'>New Initiative</span>
+            </button>
             {/* End */}
-            <Navbar />
-            <ImageSlider />
-
-            <div className='mt-4'>
-                <h3 className='text-2xl font-bold'>
-                    Initiatives
-                </h3>
-                <Latest data={initiatives} />
-            </div>
-
-            <div className='mt-4'>
-                <h3>
-                    Scheme
-                </h3>
-                <Latest data={initiatives} />
-            </div>
-
-            <div className='mt-4'>
-                <h3>
-                    Issues
-                </h3>
-                <Latest data={initiatives} />
-            </div>
-            <FAQ />
+            <Topbar />
+            <Sidebar>
+                <FAQ />
+            </Sidebar>
             <Footer />
         </div>
     );
