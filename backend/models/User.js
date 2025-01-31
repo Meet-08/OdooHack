@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    name: {
+    fullname: {
         type: String,
         required: true,
     },
@@ -12,13 +12,23 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
+        required: false,
     },
-    phone: {
+    phoneNo: {
         type: String,
         required: true,
         unique: true,
     },
+    gender: {
+        type: String,
+        enum: ["Male", "Female"],
+        required: true,
+    },
+    dob: {
+        type: Date,
+        required: true,
+    },
+    /*
     role: {
         type: String,
         enum: ["citizen", "official", "admin"], // Different user roles
@@ -36,6 +46,7 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    */
 });
 
 export const User = mongoose.model("User", userSchema);

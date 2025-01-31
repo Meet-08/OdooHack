@@ -1,5 +1,5 @@
 import express from 'express'
-import Issue from '../models/Issue.js'
+import { Issue } from '../models/Issue.js'
 
 const router = express.Router();
 

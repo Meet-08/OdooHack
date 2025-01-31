@@ -3,13 +3,21 @@ import registerSMS from '../assets/register-sms.png';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import LoginOption from '../components/LoginOption';
+import axios from 'axios';
 
 const Register = () => {
 
     const { register, handleSubmit, formState: { errors } } = useForm();
 
-    const submitForm = (data) => {
+    const submitForm = async (data) => {
+        ///here backend and data is in already in object....
         console.log(data);
+        try {
+            const response = await axios.post('http://localhost:3000/api/users/register', data);
+            alert('User registered successfully!');
+        } catch (err) {
+            alert('Error reporting issue!' + err);
+        }
     }
 
     return (
@@ -50,7 +58,7 @@ const Register = () => {
                     </h2>
                     <form className='flex flex-col gap-4' onSubmit={handleSubmit(submitForm)}>
                         <input type="text" placeholder='Enter Your full name here'
-                            {...register('fullName', { required: 'Full name is required ' })}
+                            {...register('fullname', { required: 'Full name is required ' })}
                             className='px-4 py-2 rounded-lg border-2 border-gray-500' />
                         {errors.fullName && <p>{errors.fullName.message}</p>}
                         <input type="text" placeholder='Enter Your Email here'
@@ -66,7 +74,7 @@ const Register = () => {
                             className='px-4 py-2 rounded-lg border-2 border-gray-500' />
                         {errors.phoneNo && <p>{errors.phoneNo.message}</p>}
                         <input type="date" {...register("dob", { required: 'Date of birth required' })}
-                            pattern='dd-mm-yyyy' className='border-2 border-gray-500 rounded-lg' />
+                            pattern='mm-dd-yyyy' className='border-2 border-gray-500 rounded-lg' />
 
                         <label htmlFor="gender">Choose an Gender:</label>
                         <select {...register('gender', { required: 'Please select an Gender' })}
