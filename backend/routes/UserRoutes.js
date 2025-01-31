@@ -21,25 +21,4 @@ router.get('/users', async (req, res) => {
     }
 })
 
-// // Create a schema for form data
-// const formSchema = new mongoose.Schema({
-//     name: String,
-//     email: String,
-//     message: String
-// });
-
-// // Create a model from the schema
-// const FormData = mongoose.model('FormData', formSchema);
-
-// // POST route to save form data
-// app.post('/submit-form', (req, res) => {
-//     const { name, email, message } = req.body;
-
-//     const newFormData = new FormData({ name, email, message });
-
-//     newFormData.save()
-//         .then(() => res.json({ message: 'Data saved successfully!' }))
-//         .catch((error) => res.status(500).json({ error: 'Error saving data' }));
-// });
-
 export default router;
