@@ -1,41 +1,46 @@
-const schemeSchema = new mongoose.Schema({
-    title: {
+import mongoose, { Types } from 'mongoose'
+
+const EligibilitySchema = new mongoose.Schema({
+    age: {
+        min: { type: Number, required: true },
+        max: { type: Number, required: true }
+    },
+    income: {
+        min: { type: Number, required: true },
+        max: { type: Number, required: true }
+    },
+    caste: {
         type: String,
-        required: true,
+        enum: ['SC', 'ST', 'OBC', 'General'],
+        required: true
     },
-    description: {
+    gender: {
         type: String,
-        required: true,
+        enum: ['Male', 'Female'],
+        required: true
     },
-    eligibilityCriteria: {
+    state: {
         type: String,
-        required: true,
+        required: true
     },
-    benefits: {
+    district: {
         type: String,
-        required: true,
+        required: true
     },
-    startDate: {
-        type: Date,
-        required: true,
-    },
-    endDate: {
-        type: Date,
-        required: true,
-    },
-    authorityContact: {
-        name: { type: String, required: true },
-        email: { type: String, required: false },
-        phone: { type: String, required: true },
-    },
-    createdBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
+    scheme: {
+        type: Types.ObjectId,
+        ref: 'Scheme'
+    }
 });
 
-export const Scheme = mongoose.model("Scheme", schemeSchema);
+
+const SchemeSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    description: { type: String, required: true },
+    eligibility: { type: EligibilitySchema, required: true },
+},
+    {
+        timestamps: true
+    });
+
+export const Scheme = mongoose.model('Scheme', SchemeSchema);

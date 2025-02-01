@@ -1,5 +1,5 @@
 import express from 'express';
-import Post from '../models/Initiative';
+import { Post } from '../models/Initiative.js';
 
 
 const router = express.Router();
