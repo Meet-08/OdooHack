@@ -16,6 +16,7 @@ app.use(express.json());
 // Routes
 app.use('/api/issues', issueRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/posts', PostRoutes);
 // app.use('/api/schemes', schemeRoutes);
 
 app.listen(port, () => console.log(`Server started on port: ${port}`));
