@@ -8,7 +8,7 @@ const Sidebar = ({ children }) => {
 
     return (
         <div className="flex">
-            <div className="w-64 h-screen bg-white shadow-lg p-4 flex flex-col justify-between">
+            <div className="min-w-62 h-screen bg-white shadow-lg p-4 flex flex-col justify-between">
                 <div className="space-y-3">
                     {menuItems.map((item, index) => {
                         const IconComponent = item.icon;
@@ -32,9 +32,9 @@ const Sidebar = ({ children }) => {
             </div>
             <div className="h-screen w-2.5 bg-gray-300" />
 
-            <>
+            <div className="flex flex-col" >
                 {children}
-            </>
+            </div>
         </div>
     );
 };

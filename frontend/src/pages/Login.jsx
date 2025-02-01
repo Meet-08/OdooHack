@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import LoginOption from '../components/LoginOption';
 
 const Login = () => {
 
@@ -25,7 +24,7 @@ const Login = () => {
                     Login with Parichay/ MeriPehchan/ Social Profile
                 </h3>
 
-                <LoginOption />
+                {/* <LoginOption /> */}
             </div>
 
         </div>

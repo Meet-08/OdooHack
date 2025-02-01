@@ -2,7 +2,6 @@ import React from 'react'
 import registerSMS from '../assets/register-sms.png';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import LoginOption from '../components/LoginOption';
 import axios from 'axios';
 
 const Register = () => {
@@ -36,7 +35,7 @@ const Register = () => {
                         Login with Parichay/ MeriPehchan/ Social Profile
                     </h3>
 
-                    <LoginOption />
+                    {/* <LoginOption /> */}
 
                     <div>
                         <h3 className=''>
