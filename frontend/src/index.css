@@ -1,1 +1,7 @@
 @import 'tailwindcss';
+
+
+.gridbar{
+    display: grid;
+    grid-template-columns: 62% 39%;
+}

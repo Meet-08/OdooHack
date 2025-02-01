@@ -1,16 +1,20 @@
+import { useEffect, useState } from 'react';
 import React from 'react'
 import initiatives from '../utils/InitiveData'
 import { ThumbsUp, MessageSquare, Share } from 'lucide-react';
+import CreateInit from './CreateInit';
 
 const ShowInitiative = () => {
+
     return (
         <div>
+            <CreateInit />
             <div className='grid grid-cols-1 space-y-1.5'>
                 {
                     initiatives.map((initiative) => {
                         const Icon = initiative.Icon;
                         return (
-                            <div className='bg-indigo-950 flex flex-col justify-center items-center space-y-1.5 min-w-[60%] mx-4 px-2'>
+                            <div className='flex flex-col justify-center items-center space-y-1.5 min-w-[60%] mx-4 px-2' key={initiative.id}>
                                 <div className='flex w-full mt-0.5'>
                                     <div className='p-4 bg-amber-300 rounded-full mx-2'>
                                         <Icon />
@@ -37,6 +41,7 @@ const ShowInitiative = () => {
                                         <span>Share</span>
                                     </button>
                                 </div>
+                                <div className='border-[1px] border-solid border-gray-300 w-full' />
                             </div>
                         )
                     })
