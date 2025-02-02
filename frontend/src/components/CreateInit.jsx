@@ -8,7 +8,7 @@ const CreateInit = () => {
     const { register, handleSubmit, watch, formState: { errors }, reset } = useForm();
 
     const submitForm = (data) => {
-
+        setIsVisible(false);
         console.log(data);
         // After processing how to remove data from register
         reset();
@@ -21,13 +21,14 @@ const CreateInit = () => {
             </button>
             <div className={`flex-col h-fit w-24  z-10 items-center justify-center fixed inset-0 m-auto ${isVisible ? "flex" : "hidden"}`}>
 
-                <button
+                <motion.button
                     type="button"
+                    whileTap={{ y: 1 }}
                     onClick={() => setIsVisible(false)}
                     className="relative w-6 h-6 -right-28 flex items-center justify-center bg-red-500 rounded-full text-lg"
                 >
                     ✕
-                </button>
+                </motion.button>
                 <AnimatePresence initial={false}>
                     {isVisible && (
                         <motion.form onSubmit={handleSubmit(submitForm)}
@@ -50,7 +51,9 @@ const CreateInit = () => {
                             <input type="file" placeholder='Enter image here'
                                 {...register('image', { required: false })}
                                 className='w-[250px] px-2 py-4 rounded-3xl bg-amber-300' />
-                            <button onClick={() => setIsVisible(false)}>Submit</button>
+                            <motion.button whileTap={{ y: 1 }}>
+                                Submit
+                            </motion.button>
 
                         </motion.form>
                     )}

@@ -35,7 +35,7 @@ const EligibilitySchema = new mongoose.Schema({
 
 
 const SchemeSchema = new mongoose.Schema({
-    name: { type: String, required: true },
+    name: { type: String, required: true, unique: true },
     description: { type: String, required: true },
     eligibility: { type: EligibilitySchema, required: true },
 },
