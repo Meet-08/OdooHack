@@ -1,21 +1,26 @@
 import React from 'react'
 import Card from '../components/Card';
-import Sidebar from '@/components/slidebar';
-import Mstyle from '@/styles/main.module.css';
-import Addinit from '@/components/addinit';
+import Sidebar from '../components/Sidebar';
+import Mstyle from '../style/main.module.css';
+
+import RightBar from '../components/RightBar';
+
 
 function initiative() {
     return (
         <div>
             <div className={Mstyle.maindiv}>
                 <div className={Mstyle.left}>
-                    <Sidebar />
+                    <Sidebar>
+                        <Card />
+                        <RightBar></RightBar>
+                    </Sidebar>
                 </div>
                 <div className={Mstyle.right}>
 
-                    <Addinit />
 
-                    <Card />
+
+
                 </div>
             </div>
 

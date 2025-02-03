@@ -1,0 +1,14 @@
+.maindiv{
+    display: flex;
+  }
+  .left{
+    margin:5px;
+
+    width: 100%;
+
+  }
+  .right{
+    height: max-content;
+    margin:5px;
+    width: 70vw;
+  }
