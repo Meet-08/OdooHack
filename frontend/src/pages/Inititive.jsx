@@ -9,18 +9,12 @@ import RightBar from '../components/RightBar';
 function initiative() {
     return (
         <div>
-            <div className={Mstyle.maindiv}>
+            <div className={`${Mstyle.maindiv}`}>
                 <div className={Mstyle.left}>
                     <Sidebar>
                         <Card />
-                        <RightBar></RightBar>
+                        <RightBar />
                     </Sidebar>
-                </div>
-                <div className={Mstyle.right}>
-
-
-
-
                 </div>
             </div>
 
