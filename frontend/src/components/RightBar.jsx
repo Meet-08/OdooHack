@@ -14,7 +14,7 @@ const RightBar = () => {
     }
 
     return (
-        <div className='flex flex-col border-2 border-black border-solid space-y-3'>
+        <div className='flex flex-col space-y-3'>
             <div>
                 <h1 className='text-2xl font-bold'>Featured In Initiatives</h1>
                 <div className='relative flex flex-col items-center'>

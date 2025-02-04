@@ -1,65 +1,89 @@
 import React, { useState } from 'react'
-import { AnimatePresence, motion } from 'motion/react'
 import { useForm } from 'react-hook-form';
+import { Plus, X, Image, AlignEndHorizontal } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
 
 const CreateInit = () => {
 
     const [isVisible, setIsVisible] = useState(false);
-    const { register, handleSubmit, watch, formState: { errors }, reset } = useForm();
+    const [selectedImage, setSelectedImage] = useState(null);
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
+    const user = useSelector((state) => state.auth.user)
 
-    const submitForm = (data) => {
-        setIsVisible(false);
-        console.log(data);
-        // After processing how to remove data from register
-        reset();
+    const submit = async (data) => {
+        const formData = new FormData();
+        formData.append("id", user.id)
+        formData.append('name', data.title);
+        formData.append('description', data.description);
+        if (selectedImage) {
+            formData.append('image', selectedImage);
+        }
+
+        try {
+            const response = await axios.post('http://localhost:3000/api/initiatives', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            console.log(response.data);
+            toast('Initiative created successfully', {
+                icon: '👏',
+            });
+            reset();
+            setSelectedImage(null);
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            alert('Error submitting form');
+        }
+    };
+
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        setSelectedImage(file);
     }
 
     return (
-        <div className='mb-9'>
-            <button onClick={() => setIsVisible(true)} className='bg-cyan-400 px-4 py-2  rounded-3xl hover:bg-cyan-500 text-white'>
-                Create Initiative
+        <div className={`bg-violet-500 rounded-3xl ${isVisible ? "px-1.5 pb-2" : "p-0"}`}>
+            <button className='w-full px-8 py-2 my-2 flex justify-between rounded-full items-center
+            text-2xl text-white'
+                onClick={() => setIsVisible(!isVisible)}>
+                <span>Post new Initiative</span>
+                {
+                    isVisible ? <X /> : <Plus />
+                }
             </button>
-            <div className={`flex-col h-fit w-24  z-10 items-center justify-center fixed inset-0 m-auto ${isVisible ? "flex" : "hidden"}`}>
-
-                <motion.button
-                    type="button"
-                    whileTap={{ y: 1 }}
-                    onClick={() => setIsVisible(false)}
-                    className="relative w-6 h-6 -right-28 flex items-center justify-center bg-red-500 rounded-full text-lg"
-                >
-                    ✕
-                </motion.button>
-                <AnimatePresence initial={false}>
-                    {isVisible && (
-                        <motion.form onSubmit={handleSubmit(submitForm)}
-                            initial={{ opacity: 0, scale: 0 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0 }}
-                            className="w-auto h-auto p-4 flex flex-col space-y-3 bg-cyan-400 rounded-lg"
-                            key="box"
-                        >
-
-                            <input type="text" placeholder='Enter title here'
-                                {...register('title', { required: 'title is required ' })}
-                                className='w-[250px] px-2 py-4 rounded-3xl bg-amber-300' />
-                            {errors.title && <p>{errors.title.message}</p>}
-                            <input type="text" placeholder='Enter description here'
-                                {...register('description', { required: 'description is required ' })}
-                                className='w-[250px] px-2 py-4 rounded-3xl bg-amber-300' />
-                            {errors.description && <p>{errors.description.message}</p>}
-                            {/* How to take image as input */}
-                            <input type="file" placeholder='Enter image here'
-                                {...register('image', { required: false })}
-                                className='w-[250px] px-2 py-4 rounded-3xl bg-amber-300' />
-                            <motion.button whileTap={{ y: 1 }}>
-                                Submit
-                            </motion.button>
-
-                        </motion.form>
-                    )}
-                </AnimatePresence>
-            </div>
-            <div className='border-[1px] border-solid border-gray-300 w-full' />
+            {
+                isVisible && (
+                    <form className='flex flex-col p-3 bg-gray-50 rounded-2xl' onSubmit={handleSubmit(submit)}>
+                        <span className='px-2 text-[18px] font-semibold'>Title</span>
+                        <input type="text" placeholder='Title' className='w-full px-4 py-2 border-2 border-black rounded-xl'
+                            {...register("title", { required: true })} />
+                        {errors.title && <span className="text-red-500 px-2">Title is required</span>}
+                        <span className='px-2 text-[18px] font-semibold'>Description</span>
+                        <textarea type="text" placeholder='Description' className='w-full px-4 py-2 border-2 border-black rounded-xl' rows={5}
+                            {...register("description", { required: true })} />
+                        {errors.description && <span className="text-red-500 px-2">Description is required</span>}
+                        <div className='flex justify-between items-center'>
+                            <div className='flex mt-3 items-center'>
+                                <span className='font-semibold '>Add : </span>
+                                <label className="cursor-pointer px-2">
+                                    <Image />
+                                    <input type="file" className="hidden" onChange={handleImageChange} />
+                                </label>
+                                <span className="mr-2">Image</span>
+                                <AlignEndHorizontal />
+                                <span className='ml-2'>Poll</span>
+                            </div>
+                            <input type="submit" value="Post"
+                                className='bg-violet-500 px-6 py-2 mx-2 mt-1.5 rounded-xl w-24 text-xl font-bold cursor-pointer text-white' />
+                        </div>
+                    </form>
+                )
+            }
         </div>
     )
 }

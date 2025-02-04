@@ -11,8 +11,10 @@ const HomePage = () => {
             <Topbar />
             <Sidebar>
                 <ShowInitiative />
+                <div className="h-full w-2.5 bg-gray-300" />
                 <RightBar />
             </Sidebar>
+
             <Footer />
         </div>
     );

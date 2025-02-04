@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: false,
+        required: true,
     },
     phoneNo: {
         type: String,
@@ -28,6 +28,10 @@ const userSchema = new mongoose.Schema({
         type: Date,
         required: true,
     },
+    profilePic: {
+        data: Buffer,
+        contentType: String
+    }
     /*
     role: {
         type: String,

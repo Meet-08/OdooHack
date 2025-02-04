@@ -3,5 +3,5 @@
 
 .gridbar{
     display: grid;
-    grid-template-columns: 62% 39%;
+    grid-template-columns: 63% 4% 35%;
 }

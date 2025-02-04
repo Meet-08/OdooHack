@@ -5,20 +5,24 @@ import ReportPage from './pages/ReportPage'
 import SchemePage from './pages/SchemePage'
 import Register from './pages/Register'
 import Login from './pages/Login'
-import Inititive from './pages/Inititive'
+import Initiative from './pages/Initiative'
+import AuthProvider from './AuthContext/AuthProvider'
+import { Toaster } from 'react-hot-toast'
 
 const App = () => {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<HomePage />} />
-
-        <Route path='/inititive' element={<Inititive />} />
-        <Route path='/schemes' element={<SchemePage />} />
-        <Route path='/report' element={<ReportPage />} />
-        <Route path='/register' element={<Register />} />
-        <Route path='/login' element={<Login />} />
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path='/' element={<HomePage />} />
+          <Route path='/initiative' element={<Initiative />} />
+          <Route path='/schemes' element={<SchemePage />} />
+          <Route path='/report' element={<ReportPage />} />
+          <Route path='/register' element={<Register />} />
+          <Route path='/login' element={<Login />} />
+        </Routes>
+        <Toaster />
+      </AuthProvider>
     </BrowserRouter>
   )
 }

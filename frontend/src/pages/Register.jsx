@@ -3,14 +3,33 @@ import registerSMS from '../assets/register-sms.png';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useState } from 'react';
 
 const Register = () => {
 
     const { register, handleSubmit, formState: { errors } } = useForm();
+    const [image, setImage] = useState(null);
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        setImage(file);
+    }
 
     const submitForm = async (data) => {
         try {
-            const response = await axios.post('http://localhost:3000/api/users/register', data);
+            const formData = new FormData();
+            formData.append('fullname', data.fullName);
+            formData.append('email', data.email);
+            formData.append('password', data.password);
+            formData.append('phoneNo', data.phoneNo);
+            formData.append('dob', data.dob);
+            formData.append('gender', data.gender);
+            formData.append('image', image);
+            const response = await axios.post('http://localhost:3000/api/auth/register', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
             alert('User registered successfully!');
         } catch (err) {
             alert('Error Registering User!' + err);
@@ -62,6 +81,10 @@ const Register = () => {
                             {...register('email', { pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/, message: 'Invalid email address' } })}
                             className='px-4 py-2 rounded-lg border-2 border-gray-500' />
                         {errors.email && <p>{errors.email.message}</p>}
+                        <input type="text" placeholder='Enter Your Password'
+                            {...register('password', { required: "Please enter password", min: 8, max: 12 })}
+                            className='px-4 py-2 rounded-lg border-2 border-gray-500' />
+                        {errors.email && <p>{errors.email.message}</p>}
                         <input type="text" placeholder='Enter Your phone no here'
                             {...register('phoneNo',
                                 {
@@ -83,6 +106,7 @@ const Register = () => {
                         </select>
                         {errors.option && <p className="text-red-500">{errors.option.message}</p>}
 
+                        <input type="file" onChange={handleImageChange} />
                         <button type='submit' className='bg-[#1d3a7ccc] p-4 rounded-3xl hover:bg-[#1d3a7c] text-white'>
                             Create New Account
                         </button>

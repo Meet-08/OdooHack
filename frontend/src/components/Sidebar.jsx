@@ -61,9 +61,9 @@ const Sidebar = ({ children }) => {
                   ${isActive ? "bg-gray-200 shadow-md" : "hover:bg-gray-100"}`}
                             >
                                 <IconComponent
-                                    className={`w-5 h-5 transition ${isActive ? item.color : "text-gray-600"}`}
+                                    className={`w-5 h-5 transition ${isActive ? "text-violet-700" : "text-gray-600"}`}
                                 />
-                                <span className={isActive ? "text-blue-500" : "text-black"}>
+                                <span className={isActive ? "text-violet-700" : "text-black"}>
                                     {item.name}
                                 </span>
                             </Link>
@@ -74,7 +74,7 @@ const Sidebar = ({ children }) => {
 
             <div className="h-screen w-2.5 bg-gray-300" />
 
-            <div className="flex-1 gridbar p-4 overflow-y-auto">{children}</div>
+            <div className="flex-1 gridbar overflow-y-auto">{children}</div>
         </div>
     );
 };
