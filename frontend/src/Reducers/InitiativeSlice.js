@@ -2,8 +2,9 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 
 const initialState = {
-    init: []
-}
+    initiativeData: [],
+};
+
 
 export const fetchInitiative = createAsyncThunk(
     'initiative/fetch',
@@ -13,13 +14,14 @@ export const fetchInitiative = createAsyncThunk(
     }
 )
 
+
 const InitiativeSlice = createSlice({
     name: "Initiative",
     initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(fetchInitiative.fulfilled, (state, action) => {
-            state.init = action.payload;
+            state.initiativeData = action.payload;
         });
     }
 });

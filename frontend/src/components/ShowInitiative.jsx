@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import CreateInit from './CreateInit';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchInitiative } from '../Reducers/InitiativeSlice.js';
-import { ArrowBigUp, MessageCircle, Share2 } from 'lucide-react';
+import { ArrowBigUp, MessageCircle, Share2, User } from 'lucide-react';
 
 
 const ShowInitiative = () => {
 
     const dispatch = useDispatch();
-    const initiatives = useSelector((state) => state.initiative.init);
+    const initiatives = useSelector((state) => state.initiative.initiativeData);
 
     useEffect(() => {
         dispatch(fetchInitiative());
@@ -28,10 +28,10 @@ const ShowInitiative = () => {
                                 <div className='flex'>
                                     <div className='rounded-full min-w-[7%]'>
                                         {
-                                            user.profilePic ?
+                                            user?.profilePic ?
                                                 <img src={`http://localhost:3000/api/auth/profile-pic/${user._id}`} alt="" className='size-9 rounded-full object-cover' />
                                                 :
-                                                <HiUserPlus className='size-9' />
+                                                <User className='size-9' />
                                         }
                                     </div>
                                     <div>
@@ -48,8 +48,9 @@ const ShowInitiative = () => {
                                         </div>
                                         {
                                             initiative.image && (
-                                                <div>
-
+                                                <div className='mt-2'>
+                                                    <img src={`http://localhost:3000/api/initiatives/image/${initiative._id}`} alt=""
+                                                        className='h-36 aspect-video object-cover rounded-2xl' />
                                                 </div>
                                             )
                                         }
