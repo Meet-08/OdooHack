@@ -24,7 +24,7 @@ const ShowInitiative = () => {
                     initiatives.map((initiative, index) => {
                         const { user } = initiative;
                         return (
-                            <div key={initiative._id} className='mx-1'>
+                            <div key={initiative._id} className='mx-1 my-5'>
                                 <div className='flex'>
                                     <div className='rounded-full min-w-[7%]'>
                                         {

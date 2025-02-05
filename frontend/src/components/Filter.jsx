@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import FilterSection from "./FilterSection";
 import { states, caste, ministry } from "../utils/Constents";
@@ -6,30 +7,22 @@ import { getFilteredScheme } from "../Reducers/SchemeSlice";
 
 const FiltersSidebar = () => {
 
-    const { register, handleSubmit, watch, formState: { errors }, reset } = useForm();
+    const { register, handleSubmit, watch, reset } = useForm();
     const dispatcher = useDispatch();
+    let filterValues = watch();
 
-    const submit = (data) => {
+    useEffect(() => {
+        applyFilters(filterValues);
+    }, [filterValues]);
+
+    const applyFilters = (data) => {
         let filter = "";
-        if (data.age) {
-            filter += `age=${data.age}&`
-        }
-        if (data.state) {
-            filter += `state=${data.state}&`
-        }
-        if (data.gender) {
-            data.gender.forEach((gender) => {
-                filter += `gender=${gender}&`
-            })
-        }
-        if (data.ministry) {
-            data.ministry.forEach((ministry) => {
-                filter += `ministry=${ministry}&`
-            })
-        }
-        console.log(filter)
+        if (data.age) filter += `age=${data.age}&`;
+        if (data.state) filter += `state=${data.state}&`;
+        if (data.gender) data.gender?.forEach(g => filter += `gender=${g}&`);
+        if (data.ministry) data.ministry?.forEach(m => filter += `ministry=${m}&`);
         dispatcher(getFilteredScheme(filter));
-    }
+    };
 
     return (
         <div className="w-64 bg-white p-4 shadow rounded-lg ml-6 border-l-2 border-slate-400 ">
@@ -38,7 +31,7 @@ const FiltersSidebar = () => {
                 <button className="text-blue-500 text-sm" onClick={reset}>Reset</button>
             </div>
 
-            <form className="" onSubmit={handleSubmit(submit)}>
+            <form className="">
                 <FilterSection title="State">
                     <select {...register("state")}
                         className="w-full border rounded px-2 py-1">

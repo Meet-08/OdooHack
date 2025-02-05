@@ -35,25 +35,43 @@ const ShowSchemes = () => {
 
     return (
         <div>
-            <div className='flex justify-between'>
+            <div className='flex justify-between shadow-neutral-500'>
                 <h2>
-                    Total <span className='text-blue-500'>{schemes.length}</span> Schemes Available
+                    Total <span className='text-fuchsia-600'>{schemes.length}</span> Schemes Available
                 </h2>
-                <div>
+                <div className='flex gap-1 justify-center items-center'>
                     <span>sort : scheme </span>
                     <button className='' onClick={() => setOrder(!order)}>
-                        {order ? "A -> Z" : "Z -> A"}
+                        {order ? "A → Z" : "Z → A"}
                     </button>
                 </div>
             </div>
             {isLoading ? "Loading . . ." : null}
-            <div>
+            <div className='flex flex-col space-y-3'>
                 {
                     sortedSchemes.map((scheme) => {
                         return (
-                            <div key={scheme._id} className='border-2 border-gray-300 rounded-md px-1 py-2 my-2 space-y-3'>
-                                <h3 className='text-xl font-semibold'>{scheme.name}</h3>
-                                <p className='text-gray-600'>{scheme.description}</p>
+                            <div key={scheme._id} className='border-2 border-gray-300 rounded-md px-6 py-2 m-2 shadow-xl space-y-[2px]'>
+                                <h3 className='text-md font-bold '>
+                                    {scheme.domain}
+                                </h3>
+                                <h1 className='text-xl font-bold text-violet-700'>
+                                    {scheme.name}
+                                </h1>
+                                <p className='text-sm font-semibold line-clamp-2'>
+                                    {scheme.description}
+                                </p>
+                                <div className='space-x-5 mt-3'>
+                                    {
+                                        scheme.tags.map((tag) => {
+                                            return (
+                                                <span key={tag} className='text-[16px] text-violet-600 font-semibold px-4 py-1 bg-slate-300 rounded-sm'>
+                                                    {tag}
+                                                </span>
+                                            )
+                                        })
+                                    }
+                                </div>
                             </div>
                         );
                     })

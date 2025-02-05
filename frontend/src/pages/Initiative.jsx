@@ -8,7 +8,7 @@ import RightBar from '../components/RightBar';
 
 function initiative() {
     return (
-        <div>
+        <div className='container mx-6'>
             <Topbar />
             <div className={`${Mstyle.maindiv}`}>
                 <div className={Mstyle.left}>

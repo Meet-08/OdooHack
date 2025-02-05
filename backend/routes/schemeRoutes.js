@@ -12,6 +12,17 @@ router.get('/schemes', async (req, res) => {
     }
 })
 
+router.post('/addScheme', async (req, res) => {
+    try {
+        const { name, description, eligibility, tags, domain } = req.body;
+        const newScheme = new Scheme({ name, description, eligibility, tags, domain });
+        await newScheme.save();
+        res.status(201).json(newScheme);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+})
+
 // GET /schemes/filter?age=25&income=30000&caste=OBC&gender=Male&state=Maharashtra&district=Mumbai
 router.get('/schemes/filter', async (req, res) => {
     try {

@@ -27,10 +27,6 @@ const EligibilitySchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    scheme: {
-        type: Types.ObjectId,
-        ref: 'Scheme'
-    }
 });
 
 
@@ -38,6 +34,8 @@ const SchemeSchema = new mongoose.Schema({
     name: { type: String, required: true, unique: true },
     description: { type: String, required: true },
     eligibility: { type: EligibilitySchema, required: true },
+    tags: { type: [String], required: false },
+    domain: { type: String, required: true }
 },
     {
         timestamps: true
