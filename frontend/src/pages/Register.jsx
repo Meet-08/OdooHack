@@ -1,120 +1,103 @@
-import React from 'react'
-import registerSMS from '../assets/register-sms.png';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom'
+import Toast from 'react-hot-toast'
+import RegisterLogo from '../assets/RegisterLogo-removebg-preview.png';
 
 const Register = () => {
 
-    const { register, handleSubmit, formState: { errors } } = useForm();
-    const [image, setImage] = useState(null);
-
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        setImage(file);
-    }
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
+    const [passwordVisible, setPasswordVisible] = useState(false);
+    const navigate = useNavigate();
 
     const submitForm = async (data) => {
         try {
-            const formData = new FormData();
-            formData.append('fullname', data.fullName);
-            formData.append('email', data.email);
-            formData.append('password', data.password);
-            formData.append('phoneNo', data.phoneNo);
-            formData.append('dob', data.dob);
-            formData.append('gender', data.gender);
-            formData.append('image', image);
-            const response = await axios.post('http://localhost:3000/api/auth/register', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-            alert('User registered successfully!');
+            const response = await axios.post('http://localhost:3000/api/auth/register', data);
+            if (response.status === 200) {
+                Toast.success('User Registered Successfully!');
+                reset();
+                setTimeout(() => {
+                    navigate("/login");
+                }, 1000);
+            }
         } catch (err) {
             alert('Error Registering User!' + err);
         }
     }
 
     return (
-        <div className='container mx-auto bg-slate-300 p-4'>
-
-            <div className='text-center text-black space-y-2'>
-                <h1 className='text-2xl font-bold'>
-                    Create MyGov Account
-                </h1>
-                <p className='text-sm'>
-                    Already have an account? <Link to='/login' className='text-blue-500'>Login</Link>
-                </p>
+        <div className='flex w-screen h-screen justify-center items-center gap-2'>
+            <div className='w-[50%] h-screen flex justify-center items-center bg-gray-100'>
+                <img src={RegisterLogo} alt="Register page logo" />
             </div>
-
-            <div className='flex flex-col-reverse sm:flex-row justify-center items-center gap-4 mt-4'>
-                <div className=''>
-                    <h3 className='mb-4'>
-                        Login with Parichay/ MeriPehchan/ Social Profile
-                    </h3>
-
-                    {/* <LoginOption /> */}
-
-                    <div>
-                        <h3 className=''>
-                            Register with SMS
-                        </h3>
-                        <div>
-                            <img src={registerSMS} alt="" />
-                        </div>
+            <div className="max-w-full mx-auto px-4 py-8 flex flex-col justify-between items-center">
+                <h2 className="text-3xl font-semibold mb-8 text-center">Create your Account</h2>
+                <form className="w-[80%] space-y-2 border-[2px] border-slate-200 py-3 px-6 rounded-md" onSubmit={handleSubmit(submitForm)}>
+                    <label htmlFor="Fullname" className='font-[400]'>Full Name</label>
+                    <input
+                        type="text" id='Fullname'
+                        placeholder="Full Name"
+                        {...register("fullname", { required: "Please Enter fullname", min: { value: 6, message: "Fullname must contain more then 6 letter" } })}
+                        className="w-full px-2 py-[10px] border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-300"
+                    />
+                    {errors.fullname && <p className='text-red-500'>{errors.fullname.message}</p>}
+                    <label htmlFor="email">Email</label>
+                    <input
+                        type="email" id='email'
+                        placeholder="Email"
+                        {...register("email", { required: "Please Enter email" })}
+                        className="w-full px-2 py-[10px] border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-300"
+                    />
+                    {errors.email && <p className='text-red-500'>{errors.email.message}</p>}
+                    <label htmlFor="phoneNo">Phone number</label>
+                    <div className="flex items-center border rounded-lg p-2 mt-1 className=w-full px-2 py-[10px] border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-300">
+                        <span className="mr-2">+91</span>
+                        <input
+                            type="tel" id='phoneNo'
+                            placeholder="Phone number"
+                            {...register("phoneNo", { required: false })}
+                            className="w-full focus:outline-none"
+                        />
+                        {errors.phoneNo && <p className='text-red-500'>{errors.phoneNo.message}</p>}
                     </div>
-                </div>
-
-                <div className='hidden md:block border-l-2 border-l-gray-600 w-0.5 h-96' />
-
-                <div className='ml-2 flex flex-col gap-4'>
-                    <h2 >
-                        Register with Email or Mobile Number
-                    </h2>
-                    <form className='flex flex-col gap-4' onSubmit={handleSubmit(submitForm)}>
-                        <input type="text" placeholder='Enter Your full name here'
-                            {...register('fullname', { required: 'Full name is required ' })}
-                            className='px-4 py-2 rounded-lg border-2 border-gray-500' />
-                        {errors.fullName && <p>{errors.fullName.message}</p>}
-                        <input type="text" placeholder='Enter Your Email here'
-                            {...register('email', { pattern: { value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/, message: 'Invalid email address' } })}
-                            className='px-4 py-2 rounded-lg border-2 border-gray-500' />
-                        {errors.email && <p>{errors.email.message}</p>}
-                        <input type="text" placeholder='Enter Your Password'
-                            {...register('password', { required: "Please enter password", min: 8, max: 12 })}
-                            className='px-4 py-2 rounded-lg border-2 border-gray-500' />
-                        {errors.email && <p>{errors.email.message}</p>}
-                        <input type="text" placeholder='Enter Your phone no here'
-                            {...register('phoneNo',
-                                {
-                                    required: 'Phone no is required ',
-                                    pattern: { value: /^[0-9]{10}$/, message: 'Invalid phone number' }
-                                })}
-                            className='px-4 py-2 rounded-lg border-2 border-gray-500' />
-                        {errors.phoneNo && <p>{errors.phoneNo.message}</p>}
-                        <input type="date" {...register("dob", { required: 'Date of birth required' })}
-                            pattern='mm-dd-yyyy' className='border-2 border-gray-500 rounded-lg' />
-
-                        <label htmlFor="gender">Choose an Gender:</label>
-                        <select {...register('gender', { required: 'Please select an Gender' })}
-                            className="px-4 py-2 rounded-lg border-2 border-gray-500"
+                    <label htmlFor="password">Password</label>
+                    <div className="relative">
+                        <input
+                            type={passwordVisible ? "text" : "password"}
+                            placeholder="Password" id='password'
+                            {...register("password", { required: "Please Enter password" })}
+                            className="w-full px-2 py-[10px] border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-300"
+                        />
+                        {errors.password && <p className='text-red-500'>{errors.password.message}</p>}
+                        <button
+                            type="button"
+                            onClick={() => setPasswordVisible(!passwordVisible)}
+                            className="absolute right-3 top-3 text-sm text-gray-500"
                         >
-                            {/* <option value="">Select Gender</option> */}
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                        </select>
-                        {errors.option && <p className="text-red-500">{errors.option.message}</p>}
-
-                        <input type="file" onChange={handleImageChange} />
-                        <button type='submit' className='bg-[#1d3a7ccc] p-4 rounded-3xl hover:bg-[#1d3a7c] text-white'>
-                            Create New Account
+                            {passwordVisible ? <EyeOff /> : <Eye />}
                         </button>
-                    </form>
-                </div>
+                    </div>
+                    <p className="text-xs text-gray-500">
+                        By continuing you agree to the
+                        <a href="#" className="text-blue-500"> Terms of use </a>
+                        and
+                        <a href="#" className="text-blue-500"> Privacy Policy</a>.
+                    </p>
+                    <button
+                        type="submit"
+                        className="w-full bg-violet-600 text-white p-2 rounded-lg hover:bg-violet-800"
+                    >
+                        Create account
+                    </button>
+                </form>
+                <p className="mt-4 text-center text-sm">
+                    Already have an account?
+                    <Link to="/login" href="Login" className="text-blue-500 font-semibold"> Login</Link>
+                </p>
             </div>
         </div>
     )
 }
-
 export default Register

@@ -2,43 +2,83 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../Reducers/AuthSlice';
+import { Eye, EyeOff, Check } from 'lucide-react';
+import RegisterLogo from '../assets/RegisterLogo-removebg-preview.png';
 
 const Login = () => {
 
-    const [phoneNo, setPhoneNo] = useState('');
+    const [identity, setIdentity] = useState('');
     const [password, setPassword] = useState('');
+    const [passwordVisible, setPasswordVisible] = useState(false);
+    const [checkbox, setCheckbox] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log(phoneNo, password);
-        dispatch(loginUser({ phoneNo, password }));
-        navigate('/');
+    const handleSubmit = () => {
+        try {
+            console.log(identity, password);
+            if (!identity || !password) {
+                alert('Please fill all the fields');
+                return;
+            }
+            dispatch(loginUser({ identity, password }));
+            navigate('/');
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (
-        <div className='container mx-auto bg-slate-300 p-4'>
-            <h2 className='text-2xl font-bold text-center'>
-                Log In to your MyGov account
-            </h2>
-            <form className='flex flex-col gap-4 max-w-screen justify-between items-center mt-8' onSubmit={handleSubmit}>
-                <input type="text" value={phoneNo} onChange={(e) => setPhoneNo(e.target.value)}
-                    className='px-4 py-2 rounded-lg border-2 border-gray-500' placeholder='Email/Phone' />
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}
-                    className='px-4 py-2 rounded-lg border-2 border-gray-500' placeholder='password' />
-                <button type='submit' className='bg-[#1d3a7ccc] p-4 rounded-3xl hover:bg-[#1d3a7c] text-white min-w-28'>
-                    Login in
-                </button>
-            </form>
-            <div className='flex flex-col justify-center items-center gap-4 mt-4'>
-                <h3 className='mb-4'>
-                    Login with Parichay/ MeriPehchan/ Social Profile
-                </h3>
-
-                {/* <LoginOption /> */}
+        <div className='flex w-screen h-screen justify-center items-center gap-2'>
+            <div className='w-[50%] h-screen flex justify-center items-center bg-gray-100'>
+                <img src={RegisterLogo} alt="Register page logo" />
             </div>
+            <div className="max-w-full h-screen mx-auto px-4 py-8 flex flex-col justify-center items-center">
+                <h2 className="text-3xl font-semibold mb-8 text-center">Login</h2>
+                <div className='space-y-4'>
+                    <label htmlFor="emailOrPhoneNo" className='font-[400]'>Email or Phone number</label>
+                    <input onChange={(e) => setIdentity(e.target.value)}
+                        type="text" id='emailOrPhoneNo'
+                        className="w-full px-2 py-[9px] border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-300"
+                    />
+                    <label htmlFor="password">Password</label>
+                    <div className="relative">
+                        <input onChange={(e) => setPassword(e.target.value)}
+                            type={passwordVisible ? "text" : "password"}
+                            placeholder="Password" id='password'
+                            className="w-full px-2 py-[10px] border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-300"
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setPasswordVisible(!passwordVisible)}
+                            className="absolute right-3 top-3 text-sm text-gray-500"
+                        >
+                            {passwordVisible ? <EyeOff /> : <Eye />}
+                        </button>
+                        <div className='flex items-center justify-between mt-4 text-black'>
+                            <label className="flex items-center space-x-2">
+                                <div className="relative">
+                                    <input
+                                        type="checkbox" onChange={(e) => setCheckbox(e.target.checked)}
+                                        className="absolute -bottom-3 appearance-none w-5 h-5 border border-gray-300 rounded-md"
+                                    />
+                                    {checkbox && <Check className="size-5 absolute -bottom-3  pointer-events-none" />}
+                                </div>
+                                <span className="absolute -bottom-0 left-6 text-sm text-gray-700">Remember me</span>
+                            </label>
 
+                            <a href="#" className="text-sm">
+                                Forgot password?
+                            </a>
+                        </div>
+                    </div>
+                    <div className='flex justify-center mt-4'>
+                        <button className="w-[50%] bg-violet-600 text-white p-2 rounded-lg hover:bg-violet-800" onClick={handleSubmit}>
+                            Login
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }

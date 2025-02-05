@@ -9,22 +9,21 @@ const upload = multer({ storage: storage });
 
 router.post("/register", upload.single("image"), async (req, res) => {
     try {
-        const { fullname, email, dob, gender, phoneNo, password } = req.body;
+        const { fullname, email, phoneNo, password } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newUser = new User({
             fullname,
             email,
-            dob,
-            gender,
             phoneNo,
             password: hashedPassword,
-            profilePic: req.file
-                ? {
-                    data: req.file.buffer,
-                    contentType: req.file.mimetype,
-                }
-                : null,
+            /* profilePic: req.file
+                 ? {
+                     data: req.file.buffer,
+                     contentType: req.file.mimetype,
+                 }
+                 : null,
+            */
         });
 
         await newUser.save();
@@ -49,8 +48,13 @@ router.get("/profile-pic/:id", async (req, res) => {
 
 router.post("/login", async (req, res) => {
     try {
-        const { phoneNo, password } = req.body;
-        const user = await User.findOne({ phoneNo });
+        const { identity, password } = req.body;
+        let user;
+        if (identity.includes('@')) {
+            user = await User.findOne({ email: identity });
+        } else {
+            user = await User.findOne({ phoneNo: identity });
+        }
 
         if (!user || !(await bcrypt.compare(password, user.password))) {
             return res.status(401).json({ message: "Invalid credentials" });

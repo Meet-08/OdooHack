@@ -9,8 +9,6 @@ const Topbar = () => {
 
     const [keyword, setKeyword] = useState('');
     const user = useSelector((state) => state.auth.user);
-    console.log(user);
-
 
     return (
         <>
@@ -31,7 +29,7 @@ const Topbar = () => {
                     <MdOutlineNotificationsNone /> */}
                 <div className='flex items-center justify-center object-contain space-x-4 mx-7'>
                     <div className='group flex items-center'>
-                        {user ? <img src={`http://localhost:3000/api/auth/profile-pic/${user.id}`}
+                        {user?.profilePic ? <img src={`http://localhost:3000/api/auth/profile-pic/${user.id}`}
                             className='size-9' /> : <HiUserPlus className='size-9' />}
                         <div className="relative w-0 h-0 before:content-[''] before:absolute before:border-x-8 before:border-x-transparent before:border-t-8 before:border-t-black" />
                         <div className='absolute right-2 top-12 bg-black text-indigo-400 hidden group-hover:flex flex-col space-y-1 z-20' >

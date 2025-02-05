@@ -1,47 +1,71 @@
-import { useEffect, useState } from 'react';
-import React from 'react'
-import initiatives from '../utils/InitiveData'
-import { ThumbsUp, MessageSquare, Share } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 import CreateInit from './CreateInit';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchInitiative } from '../Reducers/InitiativeSlice.js';
+import { ArrowBigUp, MessageCircle, Share2 } from 'lucide-react';
+
 
 const ShowInitiative = () => {
+
+    const dispatch = useDispatch();
+    const initiatives = useSelector((state) => state.initiative.init);
+
+    useEffect(() => {
+        dispatch(fetchInitiative());
+    }, []);
+
+    console.log(initiatives);
 
     return (
         <div>
             <CreateInit />
-            <div className='grid grid-cols-1 space-y-1.5'>
+            <div className='grid grid-cols-1 space-y-1.5 mx-2 mt-2'>
                 {
-                    initiatives.map((initiative) => {
-                        const Icon = initiative.Icon;
+                    initiatives.map((initiative, index) => {
+                        const { user } = initiative;
                         return (
-                            <div className='flex flex-col justify-center items-center space-y-1.5 min-w-[60%] mx-4 px-2' key={initiative.id}>
-                                <div className='flex w-full mt-0.5'>
-                                    <div className='p-4 bg-amber-300 rounded-full mx-2'>
-                                        <Icon />
+                            <div key={initiative._id} className='mx-1'>
+                                <div className='flex'>
+                                    <div className='rounded-full min-w-[7%]'>
+                                        {
+                                            user.profilePic ?
+                                                <img src={`http://localhost:3000/api/auth/profile-pic/${user._id}`} alt="" className='size-9 rounded-full object-cover' />
+                                                :
+                                                <HiUserPlus className='size-9' />
+                                        }
                                     </div>
-                                    <div className='flex flex-col'>
-                                        <h3 className='text-xl font-semibold'>{initiative.title}</h3>{/*username*/}
-                                        <p className='text-sm'>{initiative.description}</p>
+                                    <div>
+                                        <h3 className='font-bold'>
+                                            {user.fullname}
+                                        </h3>
+                                        <div className=''>
+                                            <h2 className='font-semibold text-xl'>
+                                                {initiative.title}
+                                            </h2>
+                                            <pre className='whitespace-pre-wrap break-words text-sm font-sans'>
+                                                {initiative.description}
+                                            </pre>
+                                        </div>
+                                        {
+                                            initiative.image && (
+                                                <div>
+
+                                                </div>
+                                            )
+                                        }
+                                        <div className='flex justify-start space-x-20'>
+                                            <span className='flex h-10 justify-start items-center'>
+                                                <ArrowBigUp /> Vote
+                                            </span>
+                                            <span className='flex h-10 justify-start items-center'>
+                                                <MessageCircle /> Comment
+                                            </span>
+                                            <span className='flex h-10 justify-start items-center'>
+                                                <Share2 /> Share
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className='relative l-[50%]'>
-                                    <img src={initiative.image} alt="" className='object-contain h-42 rounded-3xl' />
-                                </div>
-                                <div className='flex justify-between w-[80%]'>
-                                    <button className='flex '>
-                                        <ThumbsUp />
-                                        <span>Upvote</span>
-                                    </button>
-                                    <button className='flex'>
-                                        <MessageSquare />
-                                        <span>Comment</span>
-                                    </button>
-                                    <button className='flex'>
-                                        <Share />
-                                        <span>Share</span>
-                                    </button>
-                                </div>
-                                <div className='border-[1px] border-solid border-gray-300 w-full' />
                             </div>
                         )
                     })

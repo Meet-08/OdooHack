@@ -22,11 +22,11 @@ const userSchema = new mongoose.Schema({
     gender: {
         type: String,
         enum: ["Male", "Female"],
-        required: true,
+        required: false,
     },
     dob: {
         type: Date,
-        required: true,
+        required: false,
     },
     profilePic: {
         data: Buffer,
