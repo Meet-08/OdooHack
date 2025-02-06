@@ -17,7 +17,7 @@ const ShowInitiative = () => {
     console.log(initiatives);
 
     return (
-        <div>
+        <div className='scroll_hide'>
             <CreateInit />
             <div className='grid grid-cols-1 space-y-1.5 mx-2 mt-2'>
                 {

@@ -7,7 +7,7 @@ import { getFilteredScheme } from "../Reducers/SchemeSlice";
 
 const FiltersSidebar = () => {
 
-    const { register, handleSubmit, watch, reset } = useForm();
+    const { register, watch, reset } = useForm();
     const dispatcher = useDispatch();
     let filterValues = watch();
 

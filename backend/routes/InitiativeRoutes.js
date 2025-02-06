@@ -40,6 +40,7 @@ router.get("/", async (req, res) => {
     }
 });
 
+// Explain gpt
 router.get("/image/:id", async (req, res) => {
     try {
         const initiative = await Initiative.findById(req.params.id);

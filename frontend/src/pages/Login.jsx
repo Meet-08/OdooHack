@@ -16,7 +16,6 @@ const Login = () => {
 
     const handleSubmit = () => {
         try {
-            console.log(identity, password);
             if (!identity || !password) {
                 alert('Please fill all the fields');
                 return;

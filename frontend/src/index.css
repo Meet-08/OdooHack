@@ -5,3 +5,8 @@
     display: grid;
     grid-template-columns: 63% 4% 35%;
 }
+
+.scroll_hide{
+    overflow: scroll;
+    scrollbar-width: none;
+}

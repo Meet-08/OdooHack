@@ -12,6 +12,7 @@ const Scheme = () => {
             <Topbar />
             <Sidebar>
                 <ShowSchemes />
+                <div className="h-full w-2.5 bg-gray-300" />
                 <Filter />
             </Sidebar>
         </div>

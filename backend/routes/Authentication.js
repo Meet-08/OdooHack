@@ -28,6 +28,8 @@ router.post("/register", upload.single("image"), async (req, res) => {
 
         await newUser.save();
         res.json({ message: "User registered successfully" });
+        req.session.user = { id: user._id, email: user.email };
+        res.json({ message: "Login successful", user: req.session.user });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
