@@ -42,7 +42,9 @@ router.get('/schemes/filter', async (req, res) => {
         }
 
         if (caste) {
-            filter['eligibility.caste'] = caste;
+            filter['eligibility.caste'] = {
+                $in: [caste, "Any"]
+            };
         }
 
         if (gender) {
@@ -50,11 +52,15 @@ router.get('/schemes/filter', async (req, res) => {
         }
 
         if (state) {
-            filter['eligibility.state'] = state;
+            filter['eligibility.state'] = {
+                $in: [state, "Any"]
+            };
         }
 
         if (district) {
-            filter['eligibility.district'] = district;
+            filter['eligibility.district'] = {
+                $in: [district, "Any"]
+            };
         }
 
         const schemes = await Scheme.find(filter);

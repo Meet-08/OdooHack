@@ -12,7 +12,7 @@ const ShowInitiative = () => {
 
     useEffect(() => {
         dispatch(fetchInitiative());
-    }, []);
+    }, [initiatives]);
 
     console.log(initiatives);
 
@@ -24,7 +24,7 @@ const ShowInitiative = () => {
                     initiatives.map((initiative, index) => {
                         const { user } = initiative;
                         return (
-                            <div key={initiative._id} className='mx-1 my-5'>
+                            <div key={initiative._id} className='mx-1 my-5 h-full'>
                                 <div className='flex'>
                                     <div className='rounded-full min-w-[7%]'>
                                         {
@@ -55,13 +55,13 @@ const ShowInitiative = () => {
                                             )
                                         }
                                         <div className='flex justify-start space-x-20'>
-                                            <span className='flex h-10 justify-start items-center'>
-                                                <ArrowBigUp /> Vote
+                                            <span className='flex h-10 justify-start items-center gap-1.5'>
+                                                <ArrowBigUp size={29} /> Vote
                                             </span>
-                                            <span className='flex h-10 justify-start items-center'>
+                                            <span className='flex h-10 justify-start items-center gap-1.5'>
                                                 <MessageCircle /> Comment
                                             </span>
-                                            <span className='flex h-10 justify-start items-center'>
+                                            <span className='flex h-10 justify-start items-center gap-1.5'>
                                                 <Share2 /> Share
                                             </span>
                                         </div>

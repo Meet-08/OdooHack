@@ -4,11 +4,13 @@ import { Plus, X, Image, AlignEndHorizontal } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
+import CreatePoll from './Poll';
 
 const CreateInit = () => {
 
     const [isVisible, setIsVisible] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [poll, setPoll] = useState(false);
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const user = useSelector((state) => state.auth.user)
 
@@ -51,7 +53,7 @@ const CreateInit = () => {
     }
 
     return (
-        <div className={`bg-violet-500 rounded-3xl ${isVisible ? "px-1.5 pb-2" : "p-0"}`}>
+        <div className={`bg-violet-500 rounded-3xl ${isVisible ? "px-1.5 pb-2" : "p-0"} sticky`}>
             <button className='w-full px-8 py-2 my-2 flex justify-between rounded-full items-center
             text-2xl text-white'
                 onClick={() => setIsVisible(!isVisible)}>
@@ -62,30 +64,46 @@ const CreateInit = () => {
             </button>
             {
                 isVisible && (
-                    <form className='flex flex-col p-3 bg-gray-50 rounded-2xl' onSubmit={handleSubmit(submit)}>
-                        <span className='px-2 text-[18px] font-semibold'>Title</span>
-                        <input type="text" placeholder='Title' className='w-full px-4 py-2 border-2 border-black rounded-xl'
-                            {...register("title", { required: true })} />
-                        {errors.title && <span className="text-red-500 px-2">Title is required</span>}
-                        <span className='px-2 text-[18px] font-semibold'>Description</span>
-                        <textarea type="text" placeholder='Description' className='w-full px-4 py-2 border-2 border-black rounded-xl' rows={5}
-                            {...register("description", { required: true })} />
-                        {errors.description && <span className="text-red-500 px-2">Description is required</span>}
-                        <div className='flex justify-between items-center'>
-                            <div className='flex mt-3 items-center'>
-                                <span className='font-semibold '>Add : </span>
-                                <label className="cursor-pointer px-2">
-                                    <Image />
-                                    <input type="file" className="hidden" onChange={handleImageChange} />
-                                </label>
-                                <span className="mr-2">Image</span>
-                                <AlignEndHorizontal />
-                                <span className='ml-2'>Poll</span>
+                    poll ?
+                        (<>
+                            <CreatePoll />
+                            <div className='my-3 flex justify-evenly'>
+                                <button className='rounded-full px-12 py-4 bg-amber-200 cursor-pointer text-xl hover:bg-amber-400'
+                                    onClick={() => setPoll(false)}>
+                                    Close Poll
+                                </button>
+                                <button className='rounded-full px-12 py-4 bg-amber-200 hover:bg-amber-400 text-xl'>
+                                    Add Poll
+                                </button>
                             </div>
-                            <input type="submit" value="Post"
-                                className='bg-violet-500 px-6 py-2 mx-2 mt-1.5 rounded-xl w-24 text-xl font-bold cursor-pointer text-white' />
-                        </div>
-                    </form>
+                        </>)
+                        : (
+                            <form onSubmit={handleSubmit(submit)}
+                                className='flex flex-col p-3 bg-gray-50 rounded-2xl transition-all duration-200'>
+                                <span className='px-2 text-[18px] font-semibold'>Title</span>
+                                <input type="text" placeholder='Title' className='w-full px-4 py-2 border-2 border-black rounded-xl'
+                                    {...register("title", { required: true })} />
+                                {errors.title && <span className="text-red-500 px-2">Title is required</span>}
+                                <span className='px-2 text-[18px] font-semibold'>Description</span>
+                                <textarea type="text" placeholder='Description' className='w-full px-4 py-2 border-2 border-black rounded-xl' rows={5}
+                                    {...register("description", { required: true })} />
+                                {errors.description && <span className="text-red-500 px-2">Description is required</span>}
+                                <div className='flex justify-between items-center'>
+                                    <div className='flex mt-3 items-center'>
+                                        <span className='font-semibold '>Add : </span>
+                                        <label className="cursor-pointer px-2">
+                                            <Image />
+                                            <input type="file" className="hidden" onChange={handleImageChange} />
+                                        </label>
+                                        <span className="mr-2">Image</span>
+                                        <AlignEndHorizontal onClick={() => setPoll(true)} className='cursor-pointer' />
+                                        <span className='ml-2'>Poll</span>
+                                    </div>
+                                    <input type="submit" value="Post"
+                                        className='bg-violet-500 hover:bg-violet-600 px-6 py-2 mx-2 mt-1.5 rounded-xl w-24 text-xl font-bold cursor-pointer text-white' />
+                                </div>
+                            </form>
+                        )
                 )
             }
         </div>

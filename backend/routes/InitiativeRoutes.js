@@ -33,7 +33,7 @@ router.post("/", upload.single("image"), async (req, res) => {
 
 router.get("/", async (req, res) => {
     try {
-        const initiatives = await Initiative.find().populate("user");
+        const initiatives = await Initiative.find().sort({ _id: -1 }).populate("user");
         res.json(initiatives);
     } catch (error) {
         res.status(500).json({ error: error.message });
