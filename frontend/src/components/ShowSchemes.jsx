@@ -51,7 +51,7 @@ const ShowSchemes = () => {
                 {
                     sortedSchemes.map((scheme) => {
                         return (
-                            <div key={scheme._id} className='border-2 border-gray-300 rounded-md px-6 py-2 m-2 shadow-xl space-y-[2px]'>
+                            <div key={scheme._id} className='border-2 border-gray-300 rounded-md px-6 py-3 m-2 shadow-xl space-y-[2px]'>
                                 <h3 className='text-md font-bold '>
                                     {scheme.domain}
                                 </h3>

@@ -13,6 +13,10 @@ const CreateInit = () => {
     const user = useSelector((state) => state.auth.user)
 
     const submit = async (data) => {
+        if (!user) {
+            toast.error('Please login to create initiative')
+            return
+        }
         const formData = new FormData();
         formData.append("id", user.id)
         formData.append('name', data.title);
