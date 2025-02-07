@@ -34,7 +34,7 @@ const Sidebar = ({ children }) => {
 
             <div className="h-screen w-2.5 bg-gray-300" />
 
-            <div className="flex-1 gridbar overflow-y-auto ">{children}</div>
+            <div className="flex-1 gridbar overflow-y-auto w-full">{children}</div>
         </div>
     );
 };

@@ -12,7 +12,8 @@ const InitiativeSchema = new mongoose.Schema({
         default: 0
     },
     likedBy: {
-        type: [mongoose.SchemaTypes.ObjectId]
+        type: [mongoose.SchemaTypes.ObjectId],
+        required: false,
     },
     commentCount: {
         type: Number,

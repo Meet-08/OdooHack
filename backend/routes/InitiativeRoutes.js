@@ -22,10 +22,11 @@ router.post("/", upload.single("image"), async (req, res) => {
                 : null, // Handle cases where no image is uploaded
             user: id
         });
-
+        console.log("Working till")
         await newInitiative.save();
         res.status(201).json({ message: "Initiative created successfully!", initiative: newInitiative });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: error.message });
     }
 });

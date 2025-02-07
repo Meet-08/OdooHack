@@ -34,7 +34,7 @@ const ShowSchemes = () => {
     }
 
     return (
-        <div>
+        <div className='scroll_hide mt-1.5 px-2'>
             <div className='flex justify-between shadow-neutral-500'>
                 <h2>
                     Total <span className='text-fuchsia-600'>{schemes.length}</span> Schemes Available
@@ -47,7 +47,7 @@ const ShowSchemes = () => {
                 </div>
             </div>
             {isLoading ? "Loading . . ." : null}
-            <div className='flex flex-col space-y-3'>
+            <div className='flex flex-col space-y-3 '>
                 {
                     sortedSchemes.map((scheme) => {
                         return (

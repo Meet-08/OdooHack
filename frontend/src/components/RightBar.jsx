@@ -5,7 +5,7 @@ import { ChevronDown, ChevronRight } from "lucide-react";
 const RightBar = () => {
 
     return (
-        <div className="w-full bg-white pl-2 pr-5 py-4 shadow-md rounded-lg">
+        <div className="w-full bg-white py-2 px-1 shadow-md rounded-lg">
             <div>
                 <div
                     className="flex justify-between items-center cursor-pointer"

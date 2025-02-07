@@ -6,6 +6,7 @@ import { HiUserPlus } from "react-icons/hi2";
 import { useSelector } from 'react-redux';
 import { logoutUser } from '../Reducers/AuthSlice';
 import logo from '../assets/logo.svg'
+import { UserPen, LogOut } from 'lucide-react'
 
 const Topbar = () => {
 
@@ -39,15 +40,34 @@ const Topbar = () => {
                             className='size-9' /> : <HiUserPlus className='size-9' />}
                         <div className="relative w-0 h-0 before:content-[''] before:absolute before:border-x-8 before:border-x-transparent before:border-t-8 before:border-t-black" />
 
-                        <div className='absolute right-2 top-12 bg-black text-indigo-400 hidden group-hover:flex flex-col space-y-1 z-20' >
+                        <div className='absolute p-2 right-4 top-12 bg-gray-100 hidden group-hover:flex flex-col space-y-1 z-20' >
                             {
                                 user ? (<>
-                                    <Link to='/EditProfile' className='text-2xl font-semibold p-1'>
-                                        Edit Profile
-                                    </Link>
-                                    <button className='text-2xl font-semibold p-1 cursor-pointer' onClick={handleLogout}>
-                                        Log out
-                                    </button>
+                                    <div className='flex items-center relative'>
+                                        <div className='p-3'>
+                                            {user?.profilePic ? <img src={`http://localhost:3000/api/auth/profile-pic/${user.id}`}
+                                                className='size-9 object-cover' /> : <HiUserPlus className='size-9' />}
+                                        </div>
+                                        <div className='flex flex-col'>
+                                            <span>{user?.fullname}</span>
+                                            <span className='text-sm'>{user?.description || "Some static desc"}</span>
+                                        </div>
+                                        <div className='border-b border-slate-400 w-full absolute bottom-0' />
+                                    </div>
+                                    <div className='flex flex-col justify-between items-center'>
+                                        <div className='flex space-x-2 justify-center items-center'>
+                                            <UserPen size={20} />
+                                            <Link to='/EditProfile' className='text-sm font-semibold p-1'>
+                                                Profile
+                                            </Link>
+                                        </div>
+                                        <div className='flex space-x-2 justify-center items-center'>
+                                            <LogOut size={20} />
+                                            <button className='text-sm font-semibold p-1 cursor-pointer' onClick={handleLogout}>
+                                                Log out
+                                            </button>
+                                        </div>
+                                    </div>
                                 </>) : <>
                                     <Link to='/login' className='text-2xl font-semibold p-1'>
                                         Log in

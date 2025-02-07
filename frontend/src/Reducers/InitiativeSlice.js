@@ -18,14 +18,6 @@ export const fetchInitiative = createAsyncThunk(
     }
 )
 
-export const fetchInitiativeReversed = createAsyncThunk(
-    'initiative/fetchReversed',
-    async () => {
-        const { data } = await axios.get("http://localhost:3000/api/initiatives/reverse");
-        return data;
-    }
-)
-
 export const voteInitiative = createAsyncThunk("initiative/voteInitiative", async ({ initiativeId, userId }) => {
     try {
         const response = await axios.post(`http://localhost:3000/api/initiatives/vote/${initiativeId}`, { userId });

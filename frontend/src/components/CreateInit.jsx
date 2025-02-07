@@ -20,7 +20,7 @@ const CreateInit = () => {
             return
         }
         const formData = new FormData();
-        formData.append("id", user.id)
+        formData.append("id", user._id)
         formData.append('name', data.title);
         formData.append('description', data.description);
         if (selectedImage) {

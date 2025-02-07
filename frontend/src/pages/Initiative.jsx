@@ -6,7 +6,7 @@ import Topbar from '../components/Topbar'
 import RightBar from '../components/RightBar';
 import ShowInitiative from '../components/ShowInitiative';
 import { useDispatch } from 'react-redux';
-import { fetchInitiativeReversed } from '../Reducers/InitiativeSlice';
+import { fetchInitiative } from '../Reducers/InitiativeSlice';
 
 
 function initiative() {
@@ -14,11 +14,11 @@ function initiative() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(fetchInitiativeReversed());
+        dispatch(fetchInitiative());
     }, [])
 
     return (
-        <div className='container mx-6'>
+        <div className='ml-6'>
             <Topbar />
             <div className={`${Mstyle.maindiv}`}>
                 <div className={Mstyle.left}>

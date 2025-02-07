@@ -25,13 +25,14 @@ const FiltersSidebar = () => {
     };
 
     return (
-        <div className="w-64 bg-white p-4 shadow rounded-lg border-slate-400 ">
-            <div className="flex justify-between items-center mb-4">
+        <div className="w-[80%] bg-white shadow rounded-lg border-slate-400 scroll_hide px-2">
+            <div className="flex mt-2 justify-between items-center relative">
                 <h2 className="text-lg font-semibold">Filters</h2>
                 <button className="text-blue-500 text-sm" onClick={reset}>Reset</button>
+                <div className='border-b border-slate-400 w-full absolute -bottom-1' />
             </div>
 
-            <form className="">
+            <form className="mt-2">
                 <FilterSection title="State">
                     <select {...register("state")}
                         className="w-full border rounded px-2 py-1">
