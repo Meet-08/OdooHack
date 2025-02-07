@@ -4,8 +4,12 @@ import Topbar from '../components/Topbar';
 import Sidebar from '../components/Sidebar';
 import ShowInitiative from '../components/ShowInitiative';
 import RightBar from '../components/RightBar';
+import { useSelector } from 'react-redux';
 
 const HomePage = () => {
+
+    const user = useSelector((state) => state.auth.user);
+
     return (
         <div className='ml-6'>
             <Topbar />

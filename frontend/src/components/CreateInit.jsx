@@ -39,6 +39,7 @@ const CreateInit = () => {
                 icon: '👏',
             });
             reset();
+            window.location.reload();
             setSelectedImage(null);
         } catch (error) {
             console.error('Error submitting form:', error);

@@ -25,7 +25,7 @@ const FiltersSidebar = () => {
     };
 
     return (
-        <div className="w-64 bg-white p-4 shadow rounded-lg ml-6 border-l-2 border-slate-400 ">
+        <div className="w-64 bg-white p-4 shadow rounded-lg border-slate-400 ">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold">Filters</h2>
                 <button className="text-blue-500 text-sm" onClick={reset}>Reset</button>

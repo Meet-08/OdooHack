@@ -40,6 +40,15 @@ router.get("/", async (req, res) => {
     }
 });
 
+router.get("/reverse", async (req, res) => {
+    try {
+        const initiatives = await Initiative.find().populate("user");
+        res.json(initiatives);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // Explain gpt
 router.get("/image/:id", async (req, res) => {
     try {
@@ -51,5 +60,32 @@ router.get("/image/:id", async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+router.post("/vote/:id", async (req, res) => {
+    try {
+        const { userId } = req.body;
+        const initiative = await Initiative.findById(req.params.id);
+
+        if (!initiative) {
+            return res.status(404).json({ message: "Initiative not found" });
+        }
+
+        const alreadyLiked = initiative.likedBy.includes(userId);
+
+        if (alreadyLiked) {
+            initiative.likedBy = initiative.likedBy.filter(id => id.toString() !== userId);
+            initiative.voteCount -= 1;
+        } else {
+            initiative.likedBy.push(userId);
+            initiative.voteCount += 1;
+        }
+
+        await initiative.save();
+        res.json({ initiativeId: initiative._id, voteCount: initiative.voteCount, likedBy: initiative.likedBy });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 
 export default router;

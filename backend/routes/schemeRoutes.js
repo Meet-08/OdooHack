@@ -30,7 +30,6 @@ router.get('/schemes/filter', async (req, res) => {
         const filter = {};
 
         // If the query provides an age, find schemes where eligibility age range covers the given age
-        // explain gpt
         if (age) {
             filter['eligibility.age.min'] = { $lte: Number(age) };
             filter['eligibility.age.max'] = { $gte: Number(age) };

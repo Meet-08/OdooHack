@@ -11,7 +11,7 @@ const Topbar = () => {
 
     const [keyword, setKeyword] = useState('');
     const user = useSelector((state) => state.auth.user);
-    const navigate = useNavigate;
+    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const handleLogout = () => {

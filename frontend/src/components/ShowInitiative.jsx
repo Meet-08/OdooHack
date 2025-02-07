@@ -1,20 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import CreateInit from './CreateInit';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchInitiative } from '../Reducers/InitiativeSlice.js';
+import { fetchInitiative, voteInitiative } from '../Reducers/InitiativeSlice.js';
 import { ArrowBigUp, MessageCircle, Share2, User } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 
 const ShowInitiative = () => {
 
     const dispatch = useDispatch();
     const initiatives = useSelector((state) => state.initiative.initiativeData);
+    const currUser = useSelector((state) => state.auth.user);
 
     useEffect(() => {
         dispatch(fetchInitiative());
-    }, [initiatives]);
+    }, [dispatch]);
 
-    console.log(initiatives);
+    const handleVote = (initiativeId) => {
+        if (!currUser) {
+            toast.error("You must be logged in to vote !");
+        } else {
+            dispatch(voteInitiative({ initiativeId, userId: currUser._id }));
+        }
+    };
 
     return (
         <div className='scroll_hide'>
@@ -22,7 +30,8 @@ const ShowInitiative = () => {
             <div className='grid grid-cols-1 space-y-1.5 mx-2 mt-2'>
                 {
                     initiatives.map((initiative, index) => {
-                        const { user } = initiative;
+                        const { user, likedBy } = initiative;
+                        const isLiked = likedBy?.includes(currUser?._id);
                         return (
                             <div key={initiative._id} className='mx-1 my-5 h-full'>
                                 <div className='flex'>
@@ -42,9 +51,9 @@ const ShowInitiative = () => {
                                             <h2 className='font-semibold text-xl'>
                                                 {initiative.title}
                                             </h2>
-                                            <pre className='whitespace-pre-wrap break-words text-sm font-sans'>
+                                            <p className='whitespace-pre-wrap break-words text-sm font-sans'>
                                                 {initiative.description}
-                                            </pre>
+                                            </p>
                                         </div>
                                         {
                                             initiative.image && (
@@ -55,9 +64,13 @@ const ShowInitiative = () => {
                                             )
                                         }
                                         <div className='flex justify-start space-x-20'>
-                                            <span className='flex h-10 justify-start items-center gap-1.5'>
-                                                <ArrowBigUp size={29} /> Vote
-                                            </span>
+                                            <button
+                                                className='flex h-10 justify-start items-center gap-1.5'
+                                                onClick={() => handleVote(initiative._id)}
+                                            >
+                                                <ArrowBigUp size={29} fill={`${isLiked ? "black" : "white"}`} />
+                                                <span>{initiative.voteCount || 0}</span> Vote
+                                            </button>
                                             <span className='flex h-10 justify-start items-center gap-1.5'>
                                                 <MessageCircle /> Comment
                                             </span>

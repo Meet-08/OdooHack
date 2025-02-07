@@ -5,12 +5,15 @@ import { Eye, EyeOff } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom'
 import Toast from 'react-hot-toast'
 import RegisterLogo from '../assets/RegisterLogo-removebg-preview.png';
+import { useDispatch } from 'react-redux';
+import { fetchUser } from '../Reducers/AuthSlice';
 
 const Register = () => {
 
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const [passwordVisible, setPasswordVisible] = useState(false);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const submitForm = async (data) => {
         try {
@@ -18,8 +21,9 @@ const Register = () => {
             if (response.status === 200) {
                 Toast.success('User Registered Successfully!');
                 reset();
+                dispatch(fetchUser())
                 setTimeout(() => {
-                    navigate("/login");
+                    navigate("/");
                 }, 1000);
             }
         } catch (err) {

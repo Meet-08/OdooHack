@@ -26,11 +26,13 @@ router.post("/register", upload.single("image"), async (req, res) => {
             */
         });
 
-        await newUser.save();
-        res.json({ message: "User registered successfully" });
-        req.session.user = { id: user._id, email: user.email };
+        const response = await newUser.save();
+        const userWithoutPassword = response.toObject();
+        delete userWithoutPassword.password;
+        req.session.user = userWithoutPassword;
         res.json({ message: "Login successful", user: req.session.user });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -62,7 +64,9 @@ router.post("/login", async (req, res) => {
             return res.status(401).json({ message: "Invalid credentials" });
         }
 
-        req.session.user = { id: user._id, email: user.email };
+        const userWithoutPassword = user.toObject();
+        delete userWithoutPassword.password;
+        req.session.user = userWithoutPassword;
         res.json({ message: "Login successful", user: req.session.user });
     } catch (error) {
         res.status(500).json({ error: error.message });

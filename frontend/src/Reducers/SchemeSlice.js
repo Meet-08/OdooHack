@@ -34,10 +34,11 @@ export const SchemeSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder.addCase(getAllScheme.fulfilled, (state, action) => {
-            state.Schemes = action.payload
-        }),
-            builder.addCase(getFilteredScheme.fulfilled, (state, action) => {
+        builder
+            .addCase(getAllScheme.fulfilled, (state, action) => {
+                state.Schemes = action.payload
+            })
+            .addCase(getFilteredScheme.fulfilled, (state, action) => {
                 state.Schemes = action.payload
             })
     }

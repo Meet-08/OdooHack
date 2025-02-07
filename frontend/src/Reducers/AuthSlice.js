@@ -31,25 +31,26 @@ const AuthSlice = createSlice({
     initialState: { user: null, status: "idle", error: null },
     reducers: {},
     extraReducers: (builder) => {
-        builder.addCase(loginUser.fulfilled, (state, action) => {
-            state.user = action.payload
-        }),
-            builder.addCase(loginUser.rejected, (state, action) => {
-                state.error = action.error.message
-            }),
-            builder.addCase(fetchUser.fulfilled, (state, action) => {
+        builder.
+            addCase(loginUser.fulfilled, (state, action) => {
                 state.user = action.payload
-            }),
-            builder.addCase(fetchUser.rejected, (state, action) => {
+            })
+            .addCase(loginUser.rejected, (state, action) => {
                 state.error = action.error.message
-            }),
-            builder.addCase(logoutUser.fulfilled, (state) => {
+            })
+            .addCase(fetchUser.fulfilled, (state, action) => {
+                state.user = action.payload
+            })
+            .addCase(fetchUser.rejected, (state, action) => {
+                state.error = action.error.message
+            })
+            .addCase(logoutUser.fulfilled, (state) => {
                 state.user = null
-            }),
-            builder.addCase(logoutUser.rejected, (state, action) => {
+            })
+            .addCase(logoutUser.rejected, (state, action) => {
                 state.error = action.error.message
-            }),
-            builder.addCase(logoutUser.pending, (state) => {
+            })
+            .addCase(logoutUser.pending, (state) => {
                 state.status = "loading"
             })
     }
