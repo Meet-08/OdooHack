@@ -3,6 +3,7 @@ import axios from 'axios'
 
 const initialState = {
     initiativeData: [],
+    status: 'idle'
 };
 
 
@@ -34,6 +35,7 @@ const InitiativeSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(fetchInitiative.fulfilled, (state, action) => {
+                state.status = 'succeeded';
                 state.initiativeData = action.payload;
             })
             .addCase(voteInitiative.fulfilled, (state, action) => {
@@ -43,7 +45,10 @@ const InitiativeSlice = createSlice({
                     initiative.voteCount = voteCount;
                     initiative.likedBy = likedBy;
                 }
-            });
+            })
+            .addCase(fetchInitiative.pending, (state) => {
+                state.status = 'loading';
+            })
     }
 });
 
