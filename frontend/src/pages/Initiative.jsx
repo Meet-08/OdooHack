@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import Card from '../components/Card';
 import Sidebar from '../components/Sidebar';
 import Mstyle from '../style/main.module.css';
 import Topbar from '../components/Topbar'

@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router'
 import HomePage from './pages/HomePage'
-import ReportPage from './pages/ReportPage'
+import IssuePage from './pages/IssuePage'
 import SchemePage from './pages/SchemePage'
 import Register from './pages/Register'
 import Login from './pages/Login'
@@ -17,7 +17,7 @@ const App = () => {
           <Route path='/' element={<HomePage />} />
           <Route path='/initiative' element={<Initiative />} />
           <Route path='/schemes' element={<SchemePage />} />
-          <Route path='/report' element={<ReportPage />} />
+          <Route path='/issues' element={<IssuePage />} />
           <Route path='/register' element={<Register />} />
           <Route path='/login' element={<Login />} />
         </Routes>
