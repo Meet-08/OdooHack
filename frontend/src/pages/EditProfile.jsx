@@ -1,60 +1,215 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { HiUserPlus } from 'react-icons/hi2';
-import { updateProfilePic } from '../Reducers/AuthSlice';
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
+import Toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { fetchUser } from "../Reducers/AuthSlice";
 
 const EditProfile = () => {
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm();
+
     const user = useSelector((state) => state.auth.user);
-    const [image, setImage] = useState(null);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() => {
-        if (image) {
-            const formData = new FormData();
-            formData.append('image', image);
-            dispatch(updateProfilePic(formData));
+        if (user) {
+            reset({
+                fullname: user.fullname,
+                email: user.email,
+                phoneNo: user.phoneNo,
+                gender: user.gender || "",
+                dob: user.dob ? user.dob.substring(0, 10) : "",
+            });
         }
-    }, [image, dispatch]);
+    }, [user, reset]);
 
-    const handleImageChange = (e) => {
-        setImage(e.target.files[0]);
+    const onSubmit = async (data) => {
+        const formData = new FormData();
+        formData.append("fullname", data.fullname);
+        formData.append("email", data.email);
+        formData.append("phoneNo", data.phoneNo);
+        formData.append("gender", data.gender);
+        formData.append("dob", data.dob);
+
+        if (data.password) {
+            formData.append("password", data.password);
+        }
+
+        if (data.profilePic && data.profilePic[0]) {
+            formData.append("profilePic", data.profilePic[0]);
+        }
+
+        try {
+            const response = await axios.put(
+                "http://localhost:3000/api/auth/edit-profile",
+                formData,
+                { headers: { "Content-Type": "multipart/form-data" } }
+            );
+            if (response.status === 200) {
+                Toast.success("Profile updated successfully!");
+                dispatch(fetchUser());
+                navigate("/");
+            }
+        } catch (error) {
+            Toast.error(
+                "Error updating profile: " +
+                (error.response?.data?.message || error.message)
+            );
+        }
     };
 
-    const handleDeleteImage = () => {
-        setImage(null);
-        dispatch(updateProfilePic(null));
+    const handleDeleteProfilePic = async () => {
+        try {
+            const response = await axios.delete(
+                "http://localhost:3000/api/auth/delete-profile-pic"
+            );
+            if (response.status === 200) {
+                Toast.success("Profile picture deleted successfully!");
+                dispatch(fetchUser());
+            }
+        } catch (error) {
+            Toast.error(
+                "Error deleting profile picture: " +
+                (error.response?.data?.message || error.message)
+            );
+        }
     };
-    console.log(user);
+
     return (
-        <div className='container mx-auto w-screen'>
-            <div className='flex bg-amber-400'>
-                <div className=''>
-                    {user?.profilePic ? (
-                        <img
-                            src={`http://localhost:3000/api/auth/profile-pic/${user._id}`}
-                            alt="Profile"
-                            className='w-36 h-36 rounded-full'
-                        />
-                    ) : (
-                        <HiUserPlus className='w-36 h-36' />)}
-                </div>
-                <div className='flex flex-col items-center space-y-3 mt-6'>
-                    <label className='min-w-[180px] bg-sky-400 px-8 py-4 rounded-full hover:bg-sky-600 cursor-pointer' htmlFor="imageInput">
-                        {user?.profilePic ? "Change Image" : "Add Image"}
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+            <div className="w-full max-w-md p-6 bg-white shadow-md rounded-md">
+                <h2 className="text-2xl font-semibold text-center mb-4">Edit Profile</h2>
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                    {/* Full Name */}
+                    <label className="block">
+                        <span className="text-gray-700">Full Name</span>
                         <input
-                            type="file"
-                            id="imageInput"
-                            className='hidden'
-                            onChange={handleImageChange}
+                            type="text"
+                            {...register("fullname", {
+                                required: "Full Name is required",
+                                minLength: {
+                                    value: 6,
+                                    message: "Full Name must be at least 6 characters",
+                                },
+                            })}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2"
+                            placeholder="Enter your full name"
+                        />
+                        {errors.fullname && (
+                            <p className="text-red-500 text-sm">{errors.fullname.message}</p>
+                        )}
+                    </label>
+
+                    {/* Email */}
+                    <label className="block">
+                        <span className="text-gray-700">Email</span>
+                        <input
+                            type="email"
+                            {...register("email", { required: "Email is required" })}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2"
+                            placeholder="Enter your email"
+                        />
+                        {errors.email && (
+                            <p className="text-red-500 text-sm">{errors.email.message}</p>
+                        )}
+                    </label>
+
+                    {/* Phone Number */}
+                    <label className="block">
+                        <span className="text-gray-700">Phone Number</span>
+                        <input
+                            type="tel"
+                            {...register("phoneNo", {
+                                required: "Phone number is required",
+                            })}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2"
+                            placeholder="Enter your phone number"
+                        />
+                        {errors.phoneNo && (
+                            <p className="text-red-500 text-sm">{errors.phoneNo.message}</p>
+                        )}
+                    </label>
+
+                    {/* Gender */}
+                    <label className="block">
+                        <span className="text-gray-700">Gender</span>
+                        <select
+                            {...register("gender")}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2"
+                        >
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </label>
+
+                    {/* Date of Birth */}
+                    <label className="block">
+                        <span className="text-gray-700">Date of Birth</span>
+                        <input
+                            type="date"
+                            {...register("dob")}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2"
                         />
                     </label>
+
+                    {/* Password (Optional) */}
+                    <label className="block">
+                        <span className="text-gray-700">
+                            New Password (leave blank to keep unchanged)
+                        </span>
+                        <input
+                            type="password"
+                            {...register("password")}
+                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2"
+                            placeholder="Enter new password"
+                        />
+                    </label>
+
+                    {/* Profile Picture */}
+                    <label className="block">
+                        <span className="text-gray-700">Profile Picture</span>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            {...register("profilePic")}
+                            className="mt-1 block w-full"
+                        />
+                    </label>
+
+                    {/* Display current profile picture with delete option */}
+                    {user?.profilePic && (
+                        <div className="mt-2">
+                            <p className="text-gray-700">Current Profile Picture:</p>
+                            <img
+                                src={`http://localhost:3000/api/auth/profile-pic/${user._id}`}
+                                alt="Profile"
+                                className="w-20 h-20 rounded-full object-cover"
+                            />
+                            <button
+                                type="button"
+                                onClick={handleDeleteProfilePic}
+                                className="mt-2 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                            >
+                                Delete Profile Picture
+                            </button>
+                        </div>
+                    )}
+
                     <button
-                        className='min-w-[180px] bg-sky-400 px-8 py-4 rounded-full hover:bg-sky-600'
-                        onClick={handleDeleteImage}
+                        type="submit"
+                        className="w-full py-2 px-4 bg-violet-600 text-white rounded-md hover:bg-violet-700"
                     >
-                        Delete Image
+                        Update Profile
                     </button>
-                </div>
+                </form>
             </div>
         </div>
     );

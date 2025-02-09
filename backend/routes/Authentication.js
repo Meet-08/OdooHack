@@ -7,6 +7,7 @@ const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
+
 router.post("/register", upload.single("image"), async (req, res) => {
     try {
         const { fullname, email, phoneNo, password } = req.body;
@@ -17,13 +18,6 @@ router.post("/register", upload.single("image"), async (req, res) => {
             email,
             phoneNo,
             password: hashedPassword,
-            /* profilePic: req.file
-                 ? {
-                     data: req.file.buffer,
-                     contentType: req.file.mimetype,
-                 }
-                 : null,
-            */
         });
 
         const response = await newUser.save();
@@ -40,7 +34,8 @@ router.post("/register", upload.single("image"), async (req, res) => {
 router.get("/profile-pic/:id", async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
-        if (!user || !user.profilePic) return res.status(404).send("Image not found");
+        if (!user || !user.profilePic)
+            return res.status(404).send("Image not found");
 
         res.set("Content-Type", user.profilePic.contentType);
         res.send(user.profilePic.data);
@@ -49,12 +44,11 @@ router.get("/profile-pic/:id", async (req, res) => {
     }
 });
 
-
 router.post("/login", async (req, res) => {
     try {
         const { identity, password } = req.body;
         let user;
-        if (identity.includes('@')) {
+        if (identity.includes("@")) {
             user = await User.findOne({ email: identity });
         } else {
             user = await User.findOne({ phoneNo: identity });
@@ -87,24 +81,68 @@ router.post("/logout", (req, res) => {
     });
 });
 
-router.put("/update-profile-pic", upload.single("image"), async (req, res) => {
+router.put("/edit-profile", upload.single("profilePic"), async (req, res) => {
     try {
-        const user = await User.findById(req.session.user._id);
+        const userId = req.session?.user?._id;
+        if (!userId) {
+            return res.status(401).json({ message: "Not authenticated" });
+        }
+
+        const user = await User.findById(userId);
         if (!user) return res.status(404).json({ message: "User not found" });
+
+        const { fullname, email, phoneNo, gender, dob, password } = req.body;
+
+        if (fullname) user.fullname = fullname;
+        if (email) user.email = email;
+        if (phoneNo) user.phoneNo = phoneNo;
+        if (gender) user.gender = gender;
+        if (dob) user.dob = new Date(dob);
+
+        if (password) {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            user.password = hashedPassword;
+        }
+
         if (req.file) {
             user.profilePic = {
                 data: req.file.buffer,
                 contentType: req.file.mimetype,
             };
-        } else {
-            user.profilePic = null;
         }
 
         await user.save();
         const userWithoutPassword = user.toObject();
         delete userWithoutPassword.password;
         req.session.user = userWithoutPassword;
-        res.status(200).json({ message: "Profile updated successfully", user: req.session.user });
+
+        res
+            .status(200)
+            .json({ message: "Profile updated successfully", user: userWithoutPassword });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+router.delete("/delete-profile-pic", async (req, res) => {
+    try {
+        const userId = req.session?.user?._id;
+        if (!userId) {
+            return res.status(401).json({ message: "Not authenticated" });
+        }
+        const user = await User.findById(userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        user.profilePic = null;
+        await user.save();
+        const userWithoutPassword = user.toObject();
+        delete userWithoutPassword.password;
+        req.session.user = userWithoutPassword;
+
+        res.status(200).json({
+            message: "Profile picture deleted successfully",
+            user: userWithoutPassword,
+        });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
