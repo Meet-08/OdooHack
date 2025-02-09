@@ -2,8 +2,6 @@ import express from 'express';
 import multer from 'multer';
 import { Initiative } from '../models/Initiative.js';
 
-
-
 const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -22,7 +20,6 @@ router.post("/", upload.single("image"), async (req, res) => {
                 : null, // Handle cases where no image is uploaded
             user: id
         });
-        console.log("Working till")
         await newInitiative.save();
         res.status(201).json({ message: "Initiative created successfully!", initiative: newInitiative });
     } catch (error) {
@@ -52,6 +49,8 @@ router.get("/image/:id", async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+
 
 router.post("/vote/:id", async (req, res) => {
     try {

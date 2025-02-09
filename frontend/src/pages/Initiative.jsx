@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { fetchInitiative } from '../Reducers/InitiativeSlice';
 
 
-function initiative() {
+function Initiative() {
 
     const dispatch = useDispatch();
 
@@ -34,4 +34,4 @@ function initiative() {
     )
 }
 
-export default initiative
+export default Initiative

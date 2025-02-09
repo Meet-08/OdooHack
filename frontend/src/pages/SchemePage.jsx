@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Sidebar from '../components/Sidebar'
 import Topbar from '../components/Topbar'
-import axios from 'axios'
 import ShowSchemes from '../components/ShowSchemes'
 import Filter from '../components/Filter'
 
-const Scheme = () => {
+const SchemePage = () => {
 
     return (
         <div className='ml-6'>
@@ -19,4 +18,4 @@ const Scheme = () => {
     )
 }
 
-export default Scheme
+export default SchemePage

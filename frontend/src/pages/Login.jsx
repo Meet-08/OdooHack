@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../Reducers/AuthSlice';
 import { Eye, EyeOff, Check } from 'lucide-react';
+import toast from 'react-hot-toast';
 import RegisterLogo from '../assets/RegisterLogo-removebg-preview.png';
 
 const Login = () => {
@@ -21,8 +22,10 @@ const Login = () => {
                 return;
             }
             dispatch(loginUser({ identity, password }));
+            toast.success("Login successfully");
             navigate('/');
         } catch (error) {
+            toast.error("Something went wrong");
             console.log(error);
         }
     }

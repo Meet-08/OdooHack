@@ -26,6 +26,15 @@ export const logoutUser = createAsyncThunk("auth/logout", async () => {
     return null;
 });
 
+export const updateProfilePic = createAsyncThunk("auth/updateProfilePic", async (pic) => {
+    try {
+        const { data } = await axios.put("http://localhost:3000/api/auth/update-profile-pic", pic);
+        return data.user;
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 const AuthSlice = createSlice({
     name: "Auth",
     initialState: { user: null, status: "idle", error: null },
@@ -52,6 +61,12 @@ const AuthSlice = createSlice({
             })
             .addCase(logoutUser.pending, (state) => {
                 state.status = "loading"
+            })
+            .addCase(updateProfilePic.fulfilled, (state, action) => {
+                state.user = action.payload
+            })
+            .addCase(updateProfilePic.rejected, (state, action) => {
+                state.error = action.error.message
             })
     }
 })

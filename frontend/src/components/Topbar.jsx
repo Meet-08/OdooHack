@@ -36,7 +36,7 @@ const Topbar = () => {
 
                 <div className='flex items-center justify-center object-contain space-x-4 mx-7'>
                     <div className='group flex items-center'>
-                        {user?.profilePic ? <img src={`http://localhost:3000/api/auth/profile-pic/${user.id}`}
+                        {user?.profilePic ? <img src={`http://localhost:3000/api/auth/profile-pic/${user._id}`}
                             className='size-9' /> : <HiUserPlus className='size-9' />}
                         <div className="relative w-0 h-0 before:content-[''] before:absolute before:border-x-8 before:border-x-transparent before:border-t-8 before:border-t-black" />
 
@@ -45,7 +45,7 @@ const Topbar = () => {
                                 user ? (<>
                                     <div className='flex items-center relative'>
                                         <div className='p-3'>
-                                            {user?.profilePic ? <img src={`http://localhost:3000/api/auth/profile-pic/${user.id}`}
+                                            {user?.profilePic ? <img src={`http://localhost:3000/api/auth/profile-pic/${user._id}`}
                                                 className='size-9 object-cover' /> : <HiUserPlus className='size-9' />}
                                         </div>
                                         <div className='flex flex-col'>
@@ -55,12 +55,12 @@ const Topbar = () => {
                                         <div className='border-b border-slate-400 w-full absolute bottom-0' />
                                     </div>
                                     <div className='flex flex-col justify-between items-center'>
-                                        <div className='flex space-x-2 justify-center items-center'>
+                                        <Link to='/edit-profile' className='flex space-x-2 justify-center items-center'>
                                             <UserPen size={20} />
-                                            <Link to='/EditProfile' className='text-sm font-semibold p-1'>
+                                            <div className='text-sm font-semibold p-1'>
                                                 Profile
-                                            </Link>
-                                        </div>
+                                            </div>
+                                        </Link>
                                         <div className='flex space-x-2 justify-center items-center'>
                                             <LogOut size={20} />
                                             <button className='text-sm font-semibold p-1 cursor-pointer' onClick={handleLogout}>

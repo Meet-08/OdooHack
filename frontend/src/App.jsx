@@ -1,11 +1,6 @@
 import React from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router'
-import HomePage from './pages/HomePage'
-import IssuePage from './pages/IssuePage'
-import SchemePage from './pages/SchemePage'
-import Register from './pages/Register'
-import Login from './pages/Login'
-import Initiative from './pages/Initiative'
+import { HomePage, Initiative, IssuePage, Login, Register, SchemePage, EditProfile } from './pages/Pages'
 import AuthProvider from './AuthContext/AuthProvider'
 import { Toaster } from 'react-hot-toast'
 
@@ -20,6 +15,7 @@ const App = () => {
           <Route path='/issues' element={<IssuePage />} />
           <Route path='/register' element={<Register />} />
           <Route path='/login' element={<Login />} />
+          <Route path='/edit-profile' element={<EditProfile />} />
         </Routes>
         <Toaster />
       </AuthProvider>
