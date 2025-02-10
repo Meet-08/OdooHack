@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { Plus, X, Image, AlignEndHorizontal } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { useSelector } from 'react-redux';
-import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
 import CreatePoll from './Poll';
+import { addInitiative } from '../Reducers/InitiativeSlice';
 
 const CreateInit = () => {
 
@@ -12,7 +12,8 @@ const CreateInit = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [poll, setPoll] = useState(false);
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
-    const user = useSelector((state) => state.auth.user)
+    const user = useSelector((state) => state.auth.user);
+    const dispatch = useDispatch();
 
     const submit = async (data) => {
         if (!user) {
@@ -28,12 +29,7 @@ const CreateInit = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:3000/api/initiatives', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-
+            dispatch[addInitiative(formData)]
             console.log(response.data);
             toast('Initiative created successfully', {
                 icon: '👏',

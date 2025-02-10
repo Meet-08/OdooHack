@@ -38,7 +38,6 @@ router.get("/", async (req, res) => {
     }
 });
 
-// Explain gpt
 router.get("/image/:id", async (req, res) => {
     try {
         const initiative = await Initiative.findById(req.params.id);
@@ -49,8 +48,6 @@ router.get("/image/:id", async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-
-
 
 router.post("/vote/:id", async (req, res) => {
     try {
@@ -78,5 +75,39 @@ router.post("/vote/:id", async (req, res) => {
     }
 });
 
+router.get("/comment/:id", async (req, res) => {
+    try {
+        const initiative = await Initiative.findById(req.params.id);
+        if (!initiative) {
+            return res.status(404).json({ message: "Initiative not found" });
+        }
+        res.json(initiative.comments);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+router.post("/comment/:id", async (req, res) => {
+    try {
+        const { userId, comment } = req.body;
+        const initiative = await Initiative.findById(req.params.id);
+        if (!initiative) {
+            return res.status(404).json({ message: "Initiative not found" });
+        }
+
+        const newComment = {
+            user: userId,
+            comment: comment,
+            createdAt: new Date()
+        };
+
+        initiative.comments.push(newComment);
+        initiative.commentCount = initiative.comments.length;
+        await initiative.save();
+        res.status(201).json({ message: "Comment added successfully!", comment: newComment });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 
 export default router;

@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
-import Toast from "react-hot-toast";
+import Toast, { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import { fetchUser } from "../Reducers/AuthSlice";
+import { fetchUser, updateProfile } from "../Reducers/AuthSlice";
 
 const EditProfile = () => {
     const {
@@ -47,16 +47,11 @@ const EditProfile = () => {
         }
 
         try {
-            const response = await axios.put(
-                "http://localhost:3000/api/auth/edit-profile",
-                formData,
-                { headers: { "Content-Type": "multipart/form-data" } }
-            );
-            if (response.status === 200) {
-                Toast.success("Profile updated successfully!");
-                dispatch(fetchUser());
-                navigate("/");
-            }
+            await dispatch(updateProfile(formData));
+            toast.success("Login Successfully ");
+            setTimeout(() => {
+                navigate("/")
+            }, 500);
         } catch (error) {
             Toast.error(
                 "Error updating profile: " +
@@ -189,7 +184,7 @@ const EditProfile = () => {
                         <div className="mt-2">
                             <p className="text-gray-700">Current Profile Picture:</p>
                             <img
-                                src={`http://localhost:3000/api/auth/profile-pic/${user._id}`}
+                                src={`http://localhost:3000/api/auth/profile-pic/${user._id}?t=${new Date().getTime()}`}
                                 alt="Profile"
                                 className="w-20 h-20 rounded-full object-cover"
                             />

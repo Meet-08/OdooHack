@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import CreateInit from './CreateInit';
 import InitLoader from './InitLoader.jsx'
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchInitiative, voteInitiative } from '../Reducers/InitiativeSlice.js';
+import { fetchInitiative, voteInitiative, commentInitiative } from '../Reducers/InitiativeSlice.js';
 import { ArrowBigUp, MessageCircle, Share2, User } from 'lucide-react';
 import toast from 'react-hot-toast';
+import Comment from './Comment.jsx';
 
 
 const ShowInitiative = () => {
@@ -14,6 +15,7 @@ const ShowInitiative = () => {
     const currUser = useSelector((state) => state.auth.user);
     const status = useSelector((state) => state.initiative.status);
     const isLoading = status === 'loading';
+    const [isCommenting, setIsCommenting] = useState(false);
 
     useEffect(() => {
         dispatch(fetchInitiative());
@@ -43,7 +45,7 @@ const ShowInitiative = () => {
                                         <div className='rounded-full min-w-[7%]'>
                                             {
                                                 user?.profilePic ?
-                                                    <img src={`http://localhost:3000/api/auth/profile-pic/${user._id}`} alt="" className='size-9 rounded-full object-cover' />
+                                                    <img src={`http://localhost:3000/api/auth/profile-pic/${user._id}?t=${new Date().getTime()}`} alt="" className='size-9 rounded-full object-cover' />
                                                     :
                                                     <User className='size-9' />
                                             }
@@ -76,13 +78,17 @@ const ShowInitiative = () => {
                                                     <ArrowBigUp size={29} fill={`${isLiked ? "black" : "white"}`} />
                                                     <span>{initiative.voteCount || 0}</span> Vote
                                                 </button>
-                                                <span className='flex h-10 justify-start items-center gap-1.5'>
-                                                    <MessageCircle /> Comment
-                                                </span>
+                                                <button>
+                                                    <span className='flex h-10 justify-start items-center gap-1.5' onClick={() => setIsCommenting(!isCommenting)}>
+                                                        <MessageCircle /> Comment
+                                                    </span>
+
+                                                </button>
                                                 <span className='flex h-10 justify-start items-center gap-1.5'>
                                                     <Share2 /> Share
                                                 </span>
                                             </div>
+                                            {isCommenting && <Comment initiativeId={initiative._id} />}
                                         </div>
                                     </div>
                                 </div>

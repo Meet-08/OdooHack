@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { IoSearchOutline } from "react-icons/io5";
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { HiUserPlus } from "react-icons/hi2";
 import { useSelector } from 'react-redux';
-import { logoutUser } from '../Reducers/AuthSlice';
+import { fetchUser, logoutUser } from '../Reducers/AuthSlice';
 import logo from '../assets/logo.svg'
 import { UserPen, LogOut } from 'lucide-react'
 
@@ -14,6 +14,11 @@ const Topbar = () => {
     const user = useSelector((state) => state.auth.user);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(fetchUser())
+    }, [dispatch])
+
 
     const handleLogout = () => {
         dispatch(logoutUser());
@@ -35,18 +40,18 @@ const Topbar = () => {
                 </div>
 
                 <div className='flex items-center justify-center object-contain space-x-4 mx-7'>
-                    <div className='group flex items-center'>
-                        {user?.profilePic ? <img src={`http://localhost:3000/api/auth/profile-pic/${user._id}`}
-                            className='size-9' /> : <HiUserPlus className='size-9' />}
-                        <div className="relative w-0 h-0 before:content-[''] before:absolute before:border-x-8 before:border-x-transparent before:border-t-8 before:border-t-black" />
-
+                    <div className='group flex items-center '>
+                        {user?.profilePic ? <img src={`http://localhost:3000/api/auth/profile-pic/${user._id}?t=${new Date().getTime()}`}
+                            className='size-9 rounded-full object-cover' /> : <HiUserPlus className='size-9' />}
+                        <div className="relative w-0 h-0 before:content-[''] before:absolute block hover:hidden before:border-x-8 before:border-x-transparent before:border-t-8 before:border-t-black" />
+                        <div className="relative w-0 h-0 before:content-[''] before:absolute hidden hover:block before:border-x-8 before:border-x-transparent before:border-t-8 before:border-t-black translate-[90deg]" />
                         <div className='absolute p-2 right-4 top-12 bg-gray-100 hidden group-hover:flex flex-col space-y-1 z-20' >
                             {
                                 user ? (<>
                                     <div className='flex items-center relative'>
-                                        <div className='p-3'>
-                                            {user?.profilePic ? <img src={`http://localhost:3000/api/auth/profile-pic/${user._id}`}
-                                                className='size-9 object-cover' /> : <HiUserPlus className='size-9' />}
+                                        <div className='p-3 rounded-full'>
+                                            {user?.profilePic ? <img src={`http://localhost:3000/api/auth/profile-pic/${user._id}?t=${new Date().getTime()}`}
+                                                className='size-9 object-cover rounded-full' /> : <HiUserPlus className='size-9' />}
                                         </div>
                                         <div className='flex flex-col'>
                                             <span>{user?.fullname}</span>
