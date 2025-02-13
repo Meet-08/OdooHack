@@ -4,7 +4,7 @@ import { Plus, X, Image, AlignEndHorizontal } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import CreatePoll from './Poll';
-import { addInitiative } from '../Reducers/InitiativeSlice';
+import { addInitiative, fetchInitiative } from '../Reducers/InitiativeSlice';
 
 const CreateInit = () => {
 
@@ -29,13 +29,11 @@ const CreateInit = () => {
         }
 
         try {
-            dispatch[addInitiative(formData)]
-            console.log(response.data);
+            dispatch(addInitiative(formData));
             toast('Initiative created successfully', {
                 icon: '👏',
             });
             reset();
-            window.location.reload();
             setSelectedImage(null);
         } catch (error) {
             console.error('Error submitting form:', error);

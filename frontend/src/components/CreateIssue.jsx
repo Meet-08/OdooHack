@@ -58,7 +58,7 @@ const CreateIssue = () => {
             <button className='w-full px-8 py-2 my-2 flex justify-between rounded-full items-center
             text-2xl text-white'
                 onClick={() => setIsVisible(!isVisible)}>
-                <span>Post new Initiative</span>
+                <span>Raise a new Issue</span>
                 {
                     isVisible ? <X /> : <Plus />
                 }

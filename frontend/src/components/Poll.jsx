@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 const CreatePoll = () => {
     const [choices, setChoices] = useState(["", ""]);
@@ -16,9 +16,7 @@ const CreatePoll = () => {
         const updatedChoices = [...choices];
         updatedChoices[index] = value;
         setChoices(updatedChoices);
-    };
-
-    return (
+    }; return (
         <div className="mx-2 px-4 py-2 border border-slate-200 rounded-xl shadow-lg bg-white flex flex-col justify-center">
             <input type="text" className="text-lg font-semibold mb-2"
                 placeholder="Ask question " />

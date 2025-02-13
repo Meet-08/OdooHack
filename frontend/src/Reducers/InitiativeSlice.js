@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const initialState = {
     initiativeData: [],
-    status: 'idle'
+    status: 'idle',
 };
 
 export const fetchInitiative = createAsyncThunk(
@@ -39,11 +39,12 @@ export const addInitiative = createAsyncThunk(
     async (initiativeData) => {
         try {
             const response = await axios.post(
-                'http://localhost:3000/api/initiatives',
+                'http://localhost:3000/api/initiatives/',
                 initiativeData,
                 { headers: { 'Content-Type': 'multipart/form-data' } }
             );
-            return response.data;
+            console.log(response);
+            return response.data.initiative;
         } catch (error) {
             console.log("Error " + error);
         }
@@ -91,6 +92,7 @@ const InitiativeSlice = createSlice({
             })
             .addCase(addInitiative.fulfilled, (state, action) => {
                 state.initiativeData.push(action.payload);
+                state.initiativeData = [action.payload, ...state.initiativeData];
             })
             .addCase(addInitiative.rejected, (state) => {
                 state.status = 'failed';
@@ -99,6 +101,9 @@ const InitiativeSlice = createSlice({
                 const { initiativeId, comment } = action.payload;
                 const initiative = state.initiativeData.find(item => item._id === initiativeId);
                 if (initiative) {
+                    if (!initiative.comments) {
+                        initiative.comments = [];
+                    }
                     initiative.comments.push(comment);
                     initiative.commentCount = initiative.comments.length;
                 }

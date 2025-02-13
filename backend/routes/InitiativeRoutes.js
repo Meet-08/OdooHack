@@ -8,6 +8,7 @@ const upload = multer({ storage: storage });
 
 router.post("/", upload.single("image"), async (req, res) => {
     try {
+        console.log(req.body);
         const { name, description, id } = req.body;
         const newInitiative = new Initiative({
             title: name,
@@ -17,11 +18,12 @@ router.post("/", upload.single("image"), async (req, res) => {
                     data: req.file.buffer,
                     contentType: req.file.mimetype,
                 }
-                : null, // Handle cases where no image is uploaded
+                : null,
             user: id
         });
-        await newInitiative.save();
-        res.status(201).json({ message: "Initiative created successfully!", initiative: newInitiative });
+        const initiative = await (await newInitiative.save()).populate('user');
+        console.log(initiative);
+        res.status(201).json({ message: "Initiative created successfully!", initiative });
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: error.message });
@@ -95,6 +97,10 @@ router.post("/comment/:id", async (req, res) => {
             return res.status(404).json({ message: "Initiative not found" });
         }
 
+        if (!initiative.comments) {
+            initiative.comments = [];
+        }
+
         const newComment = {
             user: userId,
             comment: comment,
@@ -104,7 +110,11 @@ router.post("/comment/:id", async (req, res) => {
         initiative.comments.push(newComment);
         initiative.commentCount = initiative.comments.length;
         await initiative.save();
-        res.status(201).json({ message: "Comment added successfully!", comment: newComment });
+
+        res.status(201).json({
+            message: "Comment added successfully!",
+            comments: initiative.comments
+        });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
