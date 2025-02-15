@@ -3,6 +3,7 @@ import { User } from '../models/User.js';
 import bcrypt from 'bcrypt';
 import multer from 'multer';
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { configAWS } from '../config/aws.js';
 
 const router = express.Router();
 const storage = multer.memoryStorage();

@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer';
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { Initiative } from '../models/Initiative.js';
 import { configAWS } from '../config/aws.js';
 

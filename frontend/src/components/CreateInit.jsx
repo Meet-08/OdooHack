@@ -9,6 +9,7 @@ import { addInitiative } from '../Reducers/InitiativeSlice';
 const CreateInit = () => {
     const [isVisible, setIsVisible] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [posting, setPosting] = useState(false);
     const [poll, setPoll] = useState(false);
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const user = useSelector((state) => state.auth.user);
@@ -29,12 +30,14 @@ const CreateInit = () => {
 
         try {
             dispatch(addInitiative(formData));
+            setPosting(true);
             setTimeout(() => {
+                setPosting(false);
+                reset();
+                setSelectedImage(null);
+                setIsVisible(false);
                 toast('Initiative created successfully', { icon: '👏' });
-            }, 500);
-            reset();
-            setSelectedImage(null);
-            setIsVisible(false);
+            }, 700);
         } catch (error) {
             console.error('Error submitting form:', error);
             alert('Error submitting form');
@@ -105,7 +108,7 @@ const CreateInit = () => {
                             </div>
                             <input
                                 type="submit"
-                                value="Post"
+                                value={posting ? "Posting..." : "Post"}
                                 className='bg-[#565DE9] hover:bg-violet-800 px-6 py-2 mx-2 mt-1.5 rounded-xl w-24 text-xl font-bold cursor-pointer text-white'
                             />
                         </div>
