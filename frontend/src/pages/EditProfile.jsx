@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
-import Toast, { toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { fetchUser, updateProfile } from "../Reducers/AuthSlice";
 
@@ -48,12 +48,12 @@ const EditProfile = () => {
 
         try {
             await dispatch(updateProfile(formData));
-            toast.success("Login Successfully ");
+            toast.success("Profile updated successfully");
             setTimeout(() => {
-                navigate("/")
+                navigate("/");
             }, 500);
         } catch (error) {
-            Toast.error(
+            toast.error(
                 "Error updating profile: " +
                 (error.response?.data?.message || error.message)
             );
@@ -66,11 +66,11 @@ const EditProfile = () => {
                 "http://localhost:3000/api/auth/delete-profile-pic"
             );
             if (response.status === 200) {
-                Toast.success("Profile picture deleted successfully!");
+                toast.success("Profile picture deleted successfully!");
                 dispatch(fetchUser());
             }
         } catch (error) {
-            Toast.error(
+            toast.error(
                 "Error deleting profile picture: " +
                 (error.response?.data?.message || error.message)
             );
@@ -102,7 +102,6 @@ const EditProfile = () => {
                         )}
                     </label>
 
-                    {/* Email */}
                     <label className="block">
                         <span className="text-gray-700">Email</span>
                         <input
@@ -116,7 +115,6 @@ const EditProfile = () => {
                         )}
                     </label>
 
-                    {/* Phone Number */}
                     <label className="block">
                         <span className="text-gray-700">Phone Number</span>
                         <input
@@ -132,7 +130,6 @@ const EditProfile = () => {
                         )}
                     </label>
 
-                    {/* Gender */}
                     <label className="block">
                         <span className="text-gray-700">Gender</span>
                         <select
@@ -145,7 +142,6 @@ const EditProfile = () => {
                         </select>
                     </label>
 
-                    {/* Date of Birth */}
                     <label className="block">
                         <span className="text-gray-700">Date of Birth</span>
                         <input
@@ -155,7 +151,6 @@ const EditProfile = () => {
                         />
                     </label>
 
-                    {/* Password (Optional) */}
                     <label className="block">
                         <span className="text-gray-700">
                             New Password (leave blank to keep unchanged)
@@ -168,7 +163,6 @@ const EditProfile = () => {
                         />
                     </label>
 
-                    {/* Profile Picture */}
                     <label className="block">
                         <span className="text-gray-700">Profile Picture</span>
                         <input
@@ -179,12 +173,11 @@ const EditProfile = () => {
                         />
                     </label>
 
-                    {/* Display current profile picture with delete option */}
-                    {user?.profilePic && (
+                    {user?.profilePicUrl && (
                         <div className="mt-2">
                             <p className="text-gray-700">Current Profile Picture:</p>
                             <img
-                                src={`http://localhost:3000/api/auth/profile-pic/${user._id}?t=${new Date().getTime()}`}
+                                src={user.profilePicUrl}
                                 alt="Profile"
                                 className="w-20 h-20 rounded-full object-cover"
                             />
