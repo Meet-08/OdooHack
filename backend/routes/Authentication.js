@@ -2,7 +2,7 @@ import express from 'express';
 import { User } from '../models/User.js';
 import bcrypt from 'bcrypt';
 import multer from 'multer';
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { configAWS } from '../config/aws.js';
 
 const router = express.Router();
@@ -25,20 +25,6 @@ router.post("/register", upload.single("image"), async (req, res) => {
             password: hashedPassword,
         });
 
-        // Upload image to S3 if provided
-        if (req.file) {
-            const key = `users/${Date.now()}_${req.file.originalname}`;
-            const putCommand = new PutObjectCommand({
-                Bucket: "gramconnectv1",
-                Key: key,
-                Body: req.file.buffer,
-                ContentType: req.file.mimetype,
-            });
-            await s3.send(putCommand);
-            // Construct the public URL manually
-            newUser.profilePicUrl = `https://gramconnetv1.s3.eu-north-1.amazonaws.com/${key}`;
-        }
-
         const response = await newUser.save();
         const userWithoutPassword = response.toObject();
         delete userWithoutPassword.password;
@@ -46,19 +32,6 @@ router.post("/register", upload.single("image"), async (req, res) => {
         res.json({ message: "Registration successful", user: req.session.user });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// GET profile picture route (redirects to S3 URL)
-router.get("/profile-pic/:id", async (req, res) => {
-    try {
-        const user = await User.findById(req.params.id);
-        if (!user || !user.profilePicUrl)
-            return res.status(404).send("Image not found");
-
-        res.redirect(user.profilePicUrl);
-    } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
@@ -129,6 +102,17 @@ router.put("/edit-profile", upload.single("profilePic"), async (req, res) => {
 
         // If a new profile picture is uploaded, update it in S3
         if (req.file) {
+            if (user.profilePicUrl) {
+                const urlObj = new URL(user.profilePicUrl);
+                const key = urlObj.pathname.substring(1); // remove the leading "/"
+
+                const deleteCommand = new DeleteObjectCommand({
+                    Bucket: "gramconnectv1",
+                    Key: key,
+                });
+
+                await s3.send(deleteCommand);
+            }
             const key = `users/${Date.now()}_${req.file.originalname}`;
             const putCommand = new PutObjectCommand({
                 Bucket: "gramconnectv1",
