@@ -54,7 +54,7 @@ const CreateIssue = () => {
     }
 
     return (
-        <div className={`bg-violet-500 rounded-3xl ${isVisible ? "px-1.5 pb-2" : "p-0"} sticky`}>
+        <div className={`bg-[#565DE9] rounded-3xl ${isVisible ? "px-1.5 pb-2" : "p-0"} sticky`}>
             <button className='w-full px-8 py-2 my-2 flex justify-between rounded-full items-center
             text-2xl text-white'
                 onClick={() => setIsVisible(!isVisible)}>
@@ -99,7 +99,7 @@ const CreateIssue = () => {
                                         <span className="mr-2">Image</span>
                                     </div>
                                     <input type="submit" value="Post"
-                                        className='bg-violet-500 hover:bg-violet-600 px-6 py-2 mx-2 mt-1.5 rounded-xl w-24 text-xl font-bold cursor-pointer text-white' />
+                                        className='bg-[#565DE9] hover:bg-violet-600 px-6 py-2 mx-2 mt-1.5 rounded-xl w-24 text-xl font-bold cursor-pointer text-white' />
                                 </div>
                             </form>
                         )

@@ -19,16 +19,16 @@ const ShowInitiative = () => {
 
     const handleVote = (initiativeId) => {
         if (!currUser) {
-            toast.error("You must be logged in to vote!");
-        } else {
-            dispatch(voteInitiative({ initiativeId, userId: currUser._id }));
+            toast.error('You must be logged in to vote!');
+            return;
         }
+        dispatch(voteInitiative({ initiativeId, userId: currUser._id }));
     };
 
     return (
-        <div className='scroll_hide'>
+        <div className="scroll_hide">
             <CreateInit />
-            <div className='grid grid-cols-1 space-y-1.5 mx-2 mt-2'>
+            <div className="grid grid-cols-1 space-y-1.5 mx-2 mt-2">
                 {isLoading ? (
                     <InitLoader />
                 ) : (

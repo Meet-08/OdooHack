@@ -1,79 +1,80 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+axios.defaults.withCredentials = true;
+const API_URL = "http://localhost:3000/api";
+
 const initialState = {
     initiativeData: [],
     status: 'idle',
+    error: null,
 };
 
 export const fetchInitiative = createAsyncThunk(
     'initiative/fetch',
-    async () => {
+    async (_, { rejectWithValue }) => {
         try {
-            const { data } = await axios.get("http://localhost:3000/api/initiatives/");
+            const { data } = await axios.get(`${API_URL}/initiatives/`);
             return data;
         } catch (error) {
-            console.log("Error " + error);
+            return rejectWithValue(error.response?.data || error.message);
         }
     }
 );
 
 export const voteInitiative = createAsyncThunk(
-    "initiative/voteInitiative",
-    async ({ initiativeId, userId }) => {
+    'initiative/voteInitiative',
+    async ({ initiativeId, userId }, { rejectWithValue }) => {
         try {
-            const response = await axios.post(
-                `http://localhost:3000/api/initiatives/vote/${initiativeId}`,
-                { userId }
-            );
-            return response.data;
+            const { data } = await axios.post(`${API_URL}/initiatives/vote/${initiativeId}`, { userId });
+            return data;
         } catch (error) {
-            console.log("Error " + error);
+            return rejectWithValue(error.response?.data || error.message);
         }
     }
 );
 
 export const addInitiative = createAsyncThunk(
-    "initiative/addInitiative",
-    async (initiativeData) => {
+    'initiative/addInitiative',
+    async (initiativeData, { rejectWithValue }) => {
         try {
-            const response = await axios.post(
-                'http://localhost:3000/api/initiatives/',
+            const { data } = await axios.post(
+                `${API_URL}/initiatives/`,
                 initiativeData,
                 { headers: { 'Content-Type': 'multipart/form-data' } }
             );
-            console.log(response);
-            return response.data.initiative;
+            return data.initiative;
         } catch (error) {
-            console.log("Error " + error);
+            return rejectWithValue(error.response?.data || error.message);
         }
     }
 );
 
 export const commentInitiative = createAsyncThunk(
-    "initiative/commentInitiative",
-    async ({ initiativeId, userId, comment }) => {
+    'initiative/commentInitiative',
+    async ({ initiativeId, userId, comment }, { rejectWithValue }) => {
         try {
-            const response = await axios.post(
-                `http://localhost:3000/api/initiatives/comment/${initiativeId}`,
+            const { data } = await axios.post(
+                `${API_URL}/initiatives/comment/${initiativeId}`,
                 { userId, comment }
             );
-            return { initiativeId, comment: response.data.comment };
+            const newComment = data.comments ? data.comments[data.comments.length - 1] : data.comment;
+            return { initiativeId, comment: newComment };
         } catch (error) {
-            console.log("Error " + error);
+            return rejectWithValue(error.response?.data || error.message);
         }
     }
 );
 
-const InitiativeSlice = createSlice({
-    name: "initiative",
+const initiativeSlice = createSlice({
+    name: 'initiative',
     initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(fetchInitiative.fulfilled, (state, action) => {
-                state.status = 'succeeded';
                 state.initiativeData = action.payload;
+                state.status = 'succeeded';
             })
             .addCase(voteInitiative.fulfilled, (state, action) => {
                 const { initiativeId, voteCount, likedBy } = action.payload;
@@ -82,32 +83,36 @@ const InitiativeSlice = createSlice({
                     initiative.voteCount = voteCount;
                     initiative.likedBy = likedBy;
                 }
-            })
-            .addCase(fetchInitiative.pending, (state) => {
-                state.status = 'loading';
-            })
-            .addCase(fetchInitiative.rejected, (state) => {
-                state.status = 'failed';
+                state.status = 'succeeded';
             })
             .addCase(addInitiative.fulfilled, (state, action) => {
-                state.initiativeData.push(action.payload);
-                state.initiativeData = [action.payload, ...state.initiativeData];
-            })
-            .addCase(addInitiative.rejected, (state) => {
-                state.status = 'failed';
+                state.initiativeData.unshift(action.payload);
+                state.status = 'succeeded';
             })
             .addCase(commentInitiative.fulfilled, (state, action) => {
                 const { initiativeId, comment } = action.payload;
                 const initiative = state.initiativeData.find(item => item._id === initiativeId);
                 if (initiative) {
-                    if (!initiative.comments) {
-                        initiative.comments = [];
-                    }
-                    initiative.comments.push(comment);
+                    initiative.comments = initiative.comments ? [...initiative.comments, comment] : [comment];
                     initiative.commentCount = initiative.comments.length;
                 }
-            });
+                state.status = 'succeeded';
+            })
+            .addMatcher(
+                (action) => action.type.endsWith('/pending'),
+                (state) => {
+                    state.status = 'loading';
+                    state.error = null;
+                }
+            )
+            .addMatcher(
+                (action) => action.type.endsWith('/rejected'),
+                (state, action) => {
+                    state.status = 'failed';
+                    state.error = action.payload || action.error.message;
+                }
+            );
     }
 });
 
-export default InitiativeSlice.reducer;
+export default initiativeSlice.reducer;
