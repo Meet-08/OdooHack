@@ -1,11 +1,25 @@
 import React, { useState } from 'react';
 import { ArrowBigUp, MessageCircle, Share2, User } from 'lucide-react';
+import { useDispatch } from 'react-redux';
+import { voteInitiative } from '../Reducers/InitiativeSlice.js';
 import Comment from './Comment.jsx';
+import { toast } from 'react-hot-toast';
 
-const InitiativeItem = ({ initiative, currUser, onVote }) => {
-    const { _id, user, likedBy, voteCount, title, description, image } = initiative;
+const InitiativeItem = React.memo(({ initiative, currUser }) => {
+    // Destructure using the new S3 URL field for the initiative image.
+    const { _id, user, likedBy, voteCount, title, description, imageUrl } = initiative;
     const isLiked = likedBy?.includes(currUser?._id);
     const [showComment, setShowComment] = useState(false);
+    const dispatch = useDispatch();
+
+    const handleVote = (initiativeId) => {
+        if (!currUser) {
+            toast.error('You must be logged in to vote!');
+            return;
+        }
+        // Dispatch the vote; the optimistic update happens in the slice.
+        dispatch(voteInitiative({ initiativeId, userId: currUser._id }));
+    };
 
     const handleShare = async () => {
         if (!navigator.share) {
@@ -14,8 +28,8 @@ const InitiativeItem = ({ initiative, currUser, onVote }) => {
         }
         try {
             const shareData = { title, text: description };
-            if (image) {
-                const imageUrl = `http://localhost:3000/api/initiatives/image/${_id}`;
+            if (imageUrl) {
+                // Use the S3 URL directly for sharing.
                 const response = await fetch(imageUrl);
                 const blob = await response.blob();
                 const file = new File([blob], 'initiative-image.jpg', { type: blob.type });
@@ -33,11 +47,9 @@ const InitiativeItem = ({ initiative, currUser, onVote }) => {
         }
     };
 
-    const profilePicUrl = user?.profilePic
-        ? `http://localhost:3000/api/auth/profile-pic/${user._id}?t=${new Date().getTime()}`
-        : null;
-    const initiativeImageUrl = image ?
-        `http://localhost:3000/api/initiatives/image/${_id}?t=${new Date().getTime()}` : null;
+    // Use the new S3 field for user profile picture.
+    const profilePicUrl = user?.profilePicUrl ? user.profilePicUrl : null;
+    const initiativeImageUrl = imageUrl ? imageUrl : null;
 
     return (
         <div className="mx-1 my-5 h-full" id={_id}>
@@ -65,7 +77,7 @@ const InitiativeItem = ({ initiative, currUser, onVote }) => {
                         </div>
                     )}
                     <div className="flex justify-start space-x-20 mt-2">
-                        <button className="flex h-10 items-center gap-1.5" onClick={() => onVote(_id)}>
+                        <button className="flex h-10 items-center gap-1.5" onClick={() => handleVote(_id)}>
                             <ArrowBigUp size={29} fill={isLiked ? 'black' : 'white'} />
                             <span>{voteCount || 0}</span> Vote
                         </button>
@@ -80,11 +92,11 @@ const InitiativeItem = ({ initiative, currUser, onVote }) => {
                             </span>
                         </button>
                     </div>
-                    {showComment && <Comment initiativeId={_id} />}
+                    {showComment && <Comment initiativeId={_id} currUser={currUser} />}
                 </div>
             </div>
         </div>
     );
-};
+});
 
 export default InitiativeItem;

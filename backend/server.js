@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
 import session from 'express-session';
@@ -11,19 +14,20 @@ import InitiativeRoutes from './routes/InitiativeRoutes.js'
 const app = express();
 const port = 3000;
 
-connectDB();
 
 app.use(cors({
     origin: "http://localhost:5173",
     credentials: true
 }));
 
+connectDB();
+
 app.use(session({
-    secret: '626c06b529d53406b29ec23f6be59eb16f4890fc701e0cf5efa36e23264a004fff6d0ac27f0cec801ee94fcae9571c822cfa7ab04ad3bf1ae53b53bf5fd1b136',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-        mongoUrl: "mongodb://localhost:27017/OdooHack",
+        mongoUrl: process.env.MONGO_URL,
         collectionName: "sessions",
     }),
     cookie: {

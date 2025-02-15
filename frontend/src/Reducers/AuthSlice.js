@@ -41,8 +41,9 @@ export const logoutUser = createAsyncThunk(
     }
 );
 
+// Renamed thunk to "auth/updateProfile" for clarity; backend now returns { message, user }
 export const updateProfile = createAsyncThunk(
-    "auth/updateProfilePic",
+    "auth/updateProfile",
     async (userData, { rejectWithValue }) => {
         try {
             const response = await axios.put(`${API_URL}/edit-profile`, userData, {
@@ -69,12 +70,15 @@ const authSlice = createSlice({
             })
             .addMatcher(isFulfilled, (state, action) => {
                 state.status = "succeeded";
-                // Explicitly update user state based on fulfilled action type
+                // Update state.user based on the fulfilled action type
                 switch (action.type) {
                     case loginUser.fulfilled.toString():
                     case fetchUser.fulfilled.toString():
-                    case updateProfile.fulfilled.toString():
                         state.user = action.payload;
+                        break;
+                    case updateProfile.fulfilled.toString():
+                        // updateProfile returns { message, user }
+                        state.user = action.payload.user;
                         break;
                     case logoutUser.fulfilled.toString():
                         state.user = null;

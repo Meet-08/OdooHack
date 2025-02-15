@@ -22,35 +22,14 @@ const userSchema = new mongoose.Schema({
     gender: {
         type: String,
         enum: ["Male", "Female"],
-        required: false,
     },
     dob: {
         type: Date,
-        required: false,
     },
-    profilePic: {
-        data: Buffer,
-        contentType: String
+    // Instead of storing the image in MongoDB, store the S3 URL
+    profilePicUrl: {
+        type: String,
     }
-    /*
-    role: {
-        type: String,
-        enum: ["citizen", "official", "admin"], // Different user roles
-        default: "citizen",
-    },
-    address: {
-        type: String,
-        required: true,
-    },
-    pincode: {
-        type: String,
-        required: true,
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
-    */
 });
 
 export const User = mongoose.model("User", userSchema);

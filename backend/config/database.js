@@ -1,9 +1,7 @@
 import mongoose from 'mongoose';
 
-
-const mongoURI = 'mongodb+srv://vgecwork:smys%401120@work.ool68.mongodb.net/OdooHack?retryWrites=true&w=majority&appName=Work';
-
 const connectDB = async () => {
+    const mongoURI = process.env.MONGO_URL;
     try {
         const conn = await mongoose.connect(mongoURI);
         console.log(`MongoDB Connected: ${conn.connection.host}`);

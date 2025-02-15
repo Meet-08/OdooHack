@@ -19,10 +19,7 @@ const commentSchema = new mongoose.Schema({
 const InitiativeSchema = new mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String, required: true },
-    image: {
-        data: Buffer,
-        contentType: String
-    },
+    imageUrl: { type: String }, // S3 image URL
     voteCount: {
         type: Number,
         default: 0

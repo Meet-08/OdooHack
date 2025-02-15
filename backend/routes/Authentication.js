@@ -2,12 +2,16 @@ import express from 'express';
 import { User } from '../models/User.js';
 import bcrypt from 'bcrypt';
 import multer from 'multer';
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
+// Configure AWS S3 Client using v3
+const s3 = await configAWS();
 
+// Register route
 router.post("/register", upload.single("image"), async (req, res) => {
     try {
         const { fullname, email, phoneNo, password } = req.body;
@@ -20,30 +24,45 @@ router.post("/register", upload.single("image"), async (req, res) => {
             password: hashedPassword,
         });
 
+        // Upload image to S3 if provided
+        if (req.file) {
+            const key = `users/${Date.now()}_${req.file.originalname}`;
+            const putCommand = new PutObjectCommand({
+                Bucket: "gramconnectv1",
+                Key: key,
+                Body: req.file.buffer,
+                ContentType: req.file.mimetype,
+            });
+            await s3.send(putCommand);
+            // Construct the public URL manually
+            newUser.profilePicUrl = `https://gramconnetv1.s3.eu-north-1.amazonaws.com/${key}`;
+        }
+
         const response = await newUser.save();
         const userWithoutPassword = response.toObject();
         delete userWithoutPassword.password;
         req.session.user = userWithoutPassword;
-        res.json({ message: "Login successful", user: req.session.user });
+        res.json({ message: "Registration successful", user: req.session.user });
     } catch (error) {
         console.log(error);
         res.status(500).json({ error: error.message });
     }
 });
 
+// GET profile picture route (redirects to S3 URL)
 router.get("/profile-pic/:id", async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
-        if (!user || !user.profilePic)
+        if (!user || !user.profilePicUrl)
             return res.status(404).send("Image not found");
 
-        res.set("Content-Type", user.profilePic.contentType);
-        res.send(user.profilePic.data);
+        res.redirect(user.profilePicUrl);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
+// Login route
 router.post("/login", async (req, res) => {
     try {
         const { identity, password } = req.body;
@@ -67,6 +86,7 @@ router.post("/login", async (req, res) => {
     }
 });
 
+// GET current user profile
 router.get("/me", (req, res) => {
     if (req.session?.user) {
         res.json({ user: req.session.user });
@@ -75,12 +95,14 @@ router.get("/me", (req, res) => {
     }
 });
 
+// Logout route
 router.post("/logout", (req, res) => {
     req.session.destroy(() => {
         res.json({ message: "Logged out" });
     });
 });
 
+// Edit profile route
 router.put("/edit-profile", upload.single("profilePic"), async (req, res) => {
     try {
         const userId = req.session?.user?._id;
@@ -104,26 +126,36 @@ router.put("/edit-profile", upload.single("profilePic"), async (req, res) => {
             user.password = hashedPassword;
         }
 
+        // If a new profile picture is uploaded, update it in S3
         if (req.file) {
-            user.profilePic = {
-                data: req.file.buffer,
-                contentType: req.file.mimetype,
-            };
+            const key = `users/${Date.now()}_${req.file.originalname}`;
+            const putCommand = new PutObjectCommand({
+                Bucket: "gramconnectv1",
+                Key: key,
+                Body: req.file.buffer,
+                ContentType: req.file.mimetype,
+            });
+            try {
+                await s3.send(putCommand);
+                // Update the profilePicUrl for the user
+                user.profilePicUrl = `https://gramconnectv1.s3.eu-north-1.amazonaws.com/${key}`;
+            } catch (error) {
+                console.log("Error uploading image to S3:", error);
+            }
         }
 
         await user.save();
         const userWithoutPassword = user.toObject();
         delete userWithoutPassword.password;
         req.session.user = userWithoutPassword;
-
-        res
-            .status(200)
-            .json({ message: "Profile updated successfully", user: userWithoutPassword });
+        console.log(userWithoutPassword);
+        res.status(200).json({ message: "Profile updated successfully", user: userWithoutPassword });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
+// Delete profile picture route
 router.delete("/delete-profile-pic", async (req, res) => {
     try {
         const userId = req.session?.user?._id;
@@ -133,7 +165,21 @@ router.delete("/delete-profile-pic", async (req, res) => {
         const user = await User.findById(userId);
         if (!user) return res.status(404).json({ message: "User not found" });
 
-        user.profilePic = null;
+        // Delete the image from S3 if profilePicUrl exists
+        if (user.profilePicUrl) {
+            const urlObj = new URL(user.profilePicUrl);
+            const key = urlObj.pathname.substring(1); // remove the leading "/"
+
+            const deleteCommand = new DeleteObjectCommand({
+                Bucket: "gramconnectv1",
+                Key: key,
+            });
+
+            await s3.send(deleteCommand);
+        }
+
+        // Remove the profilePicUrl from the user document
+        user.profilePicUrl = undefined;
         await user.save();
         const userWithoutPassword = user.toObject();
         delete userWithoutPassword.password;
