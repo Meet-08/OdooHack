@@ -1,5 +1,4 @@
 import React from 'react';
-import Footer from '../components/Footer';
 import Topbar from '../components/Topbar';
 import Sidebar from '../components/Sidebar';
 import ShowInitiative from '../components/ShowInitiative';
@@ -18,8 +17,6 @@ const HomePage = () => {
                 <div className="h-full w-2.5 bg-gray-300" />
                 <RightBar />
             </Sidebar>
-
-            <Footer />
         </div>
     );
 };
